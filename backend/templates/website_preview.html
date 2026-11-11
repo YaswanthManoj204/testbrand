@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Preview: {{ website.title }} - {{ website.industry.name }}{% endblock %}
+
+{% block content %}
+<div class="bg-dark text-white py-3 border-bottom border-dark-subtle sticky-top" style="top: 70px; z-index: 1020;">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <!-- Site Info -->
+        <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-success px-3 py-1 rounded-pill">
+                <i class="bi bi-broadcast me-1"></i> Published
+            </span>
+            <div>
+                <h5 class="mb-0 fw-bold">{{ website.title }}</h5>
+                <span class="text-white-50 small">
+                    Domain: <strong class="text-info">{{ website.domain.domain_name|default:"Platform Subdomain" }}</strong>
+                </span>
+            </div>
+        </div>
+
+        <!-- Viewport Switcher Controls -->
+        <div class="d-flex align-items-center bg-black bg-opacity-40 p-1 rounded-pill border border-secondary">
+            <button class="btn btn-sm btn-dark active rounded-pill px-3" id="btnViewDesktop" title="Desktop View">
+                <i class="bi bi-display me-1"></i> Desktop
+            </button>
+            <button class="btn btn-sm btn-dark rounded-pill px-3" id="btnViewTablet" title="Tablet View">
+                <i class="bi bi-tablet me-1"></i> Tablet
+            </button>
+            <button class="btn btn-sm btn-dark rounded-pill px-3" id="btnViewMobile" title="Mobile View">
+                <i class="bi bi-phone me-1"></i> Mobile
+            </button>
+        </div>
+
+        <!-- External Open / Actions -->
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'website_standalone' slug=website.slug %}" target="_blank" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Fullscreen
+            </a>
+            <a href="{% url 'website_builder' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+                <i class="bi bi-plus-lg me-1"></i> New Site
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-4 bg-secondary bg-opacity-10 min-vh-100">
+    <!-- Viewport Container Frame -->
+    <div class="viewport-frame viewport-desktop mx-auto" id="previewViewport">
+        <iframe src="{% url 'website_standalone' slug=website.slug %}" 
+                id="previewIframe"
+                style="width: 100%; height: 85vh; border: none; display: block;" 
+                title="Website Live Viewport">
+        </iframe>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const frame = document.getElementById('previewViewport');
+    const btnDesktop = document.getElementById('btnViewDesktop');
+    const btnTablet = document.getElementById('btnViewTablet');
+    const btnMobile = document.getElementById('btnViewMobile');
+
+    function setViewport(mode) {
+        btnDesktop.classList.remove('active', 'btn-primary');
+        btnTablet.classList.remove('active', 'btn-primary');
+        btnMobile.classList.remove('active', 'btn-primary');
+        frame.classList.remove('viewport-desktop', 'viewport-tablet', 'viewport-mobile');
+
+        if (mode === 'desktop') {
+            btnDesktop.classList.add('active', 'btn-primary');
+            frame.classList.add('viewport-desktop');
+        } else if (mode === 'tablet') {
+            btnTablet.classList.add('active', 'btn-primary');
+            frame.classList.add('viewport-tablet');
+        } else if (mode === 'mobile') {
+            btnMobile.classList.add('active', 'btn-primary');
+            frame.classList.add('viewport-mobile');
+        }
+    }
+
+    btnDesktop.addEventListener('click', () => setViewport('desktop'));
+    btnTablet.addEventListener('click', () => setViewport('tablet'));
+    btnMobile.addEventListener('click', () => setViewport('mobile'));
+});
+</script>
+{% endblock %}
+

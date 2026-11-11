@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block title %}Make Your Own Website - BrandNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <a href="{% url 'landing' %}" class="btn btn-outline-secondary btn-sm rounded-pill mb-3">
+            <i class="bi bi-arrow-left me-1"></i> Back to Choices
+        </a>
+        <h1 class="fw-bold text-dark">Make Your Own Business Website</h1>
+        <p class="text-muted">Connect your domain, select your industry, and get a tailored, multi-section business website.</p>
+    </div>
+
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+        <div class="step-node active" id="stepIndicator1">
+            <div class="step-circle"><i class="bi bi-shield-check"></i></div>
+            <span>1. Connect Domain</span>
+        </div>
+        <div class="step-line" id="stepLine1"></div>
+        <div class="step-node" id="stepIndicator2">
+            <div class="step-circle">2</div>
+            <span>2. Pick Industry</span>
+        </div>
+        <div class="step-line" id="stepLine2"></div>
+        <div class="step-node" id="stepIndicator3">
+            <div class="step-circle">3</div>
+            <span>3. Business Details</span>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <form method="POST" enctype="multipart/form-data" id="websiteBuilderForm">
+                {% csrf_token %}
+
+                <!-- STEP 1: Connect Domain Gate -->
+                <div class="card shadow-sm rounded-4 border-0 mb-4 domain-gate-card" id="domainGateSection">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="p-3 bg-info text-white rounded-circle shadow-sm">
+                            <i class="bi bi-globe2 fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1 text-dark">Step 1: Connect Your Domain</h4>
+                            <p class="text-secondary small mb-0">You must connect your domain before proceeding to build your website.</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Your Domain Name</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white border-end-0 text-muted">https://</span>
+                            <input type="text" class="form-control border-start-0" id="domainInput" name="domain_name" 
+                                   placeholder="e.g. acmewebsite.com or yourbrand.sites.brandnest.live" required>
+                            <button class="btn btn-info text-white px-4 fw-semibold" type="button" id="btnVerifyDomain">
+                                <span id="btnVerifyText">Connect & Verify</span>
+                                <span id="btnVerifySpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                            </button>
+                        </div>
+                        <div class="form-text">Connect an existing domain from any registrar (GoDaddy, Namecheap, etc.) or a custom platform name.</div>
+                    </div>
+
+                    <!-- DNS Verification Challenge Box -->
+                    <div id="dnsDetailsBox" class="mt-4 p-3 bg-white rounded-3 border d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill">
+                                <i class="bi bi-check-circle-fill me-1"></i> Domain Connected & Verified
+                            </span>
+                            <span class="text-muted small"><i class="bi bi-lock-fill text-success"></i> SSL Active</span>
+                        </div>
+                        <div class="small text-secondary mb-2">Cloud Hosting DNS Target Challenge:</div>
+                        <div class="dns-code-box mb-2" id="txtRecordDisplay">TXT _brandnest-challenge.domain -> brandnest-verify-token</div>
+                        <p class="text-success small fw-medium mb-0">
+                            <i class="bi bi-unlock-fill me-1"></i> Domain unlocked. Please select your industry below!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Choose Industry (Locked until domain is verified) -->
+                <div class="card shadow-sm rounded-4 border-0 p-4 mb-4" id="industrySection" style="opacity: 0.5; pointer-events: none; transition: all 0.3s ease;">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h4 class="fw-bold mb-0 text-dark">Step 2: Choose Your Industry</h4>
+                        <span class="badge bg-secondary-subtle text-secondary" id="industryLockBadge">
+                            <i class="bi bi-lock-fill me-1"></i> Locked
+                        </span>
+                    </div>
+                    <p class="text-muted small mb-4">Each industry gets specialized website sections and dynamic form fields.</p>
+
+                    <input type="hidden" name="industry_slug" id="selectedIndustryInput" required>
+
+                    <div class="row g-3">
+                        {% for ind in industries %}
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card p-3 rounded-3 text-center industry-card-item h-100" 
+                                 data-slug="{{ ind.slug }}" 
+                                 data-name="{{ ind.name }}"
+                                 data-schema='{{ ind.form_schema|safe }}'>
+                                <div class="fs-1 text-primary mb-2">
+                                    <i class="bi {{ ind.icon }}"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 small">{{ ind.name }}</h6>
+                                <p class="text-secondary" style="font-size: 0.725rem;">{{ ind.description|truncatewords:6 }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- STEP 3: Industry-Specific Dynamic Business Form (Locked until Industry is picked) -->
+                <div class="card shadow-sm rounded-4 border-0 p-4 mb-4" id="websiteDetailsSection" style="opacity: 0.5; pointer-events: none; transition: all 0.3s ease;">
+                    <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+                        <div>
+                            <h4 class="fw-bold mb-1 text-dark">Step 3: Website Details & Content</h4>
+                            <span class="text-muted small" id="selectedIndustryIndicator">Fill in your brand and industry information</span>
+                        </div>
+                        <span class="badge bg-secondary-subtle text-secondary" id="websiteLockBadge">
+                            <i class="bi bi-lock-fill me-1"></i> Locked
+                        </span>
+                    </div>
+
+                    <!-- Core Brand Identity -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Company / Website Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="title" id="siteTitleInput" placeholder="e.g. Apex Tech Innovations" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Hero Slogan / Headline</label>
+                            <input type="text" class="form-control" name="tagline" placeholder="e.g. Empowering Modern Businesses with Scalable Technology">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">About Us / Introduction</label>
+                            <textarea class="form-control" name="about_text" rows="3" placeholder="Introduce your company, values, and what makes your business unique..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Industry Custom Fields Container -->
+                    <div id="dynamicFieldsContainer" class="p-3 bg-light rounded-3 mb-4 border border-primary-subtle">
+                        <h5 class="fw-bold text-primary mb-3"><i class="bi bi-gear-fill me-1"></i> Industry-Specific Fields</h5>
+                        <div id="dynamicFieldsList">
+                            <p class="text-muted small">Select an industry above to see specialized fields.</p>
+                        </div>
+                    </div>
+
+                    <!-- Contact & Operations -->
+                    <h5 class="fw-bold text-dark border-top pt-4 mb-3">Contact & Operating Details</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Inquiry Email</label>
+                            <input type="email" class="form-control" name="contact_email" placeholder="hello@yourbusiness.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Contact Phone</label>
+                            <input type="tel" class="form-control" name="contact_phone" placeholder="+1 (555) 019-2834">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Physical Location / Address</label>
+                            <input type="text" class="form-control" name="address" placeholder="123 Commerce Blvd, Suite 200">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Working Hours</label>
+                            <input type="text" class="form-control" name="working_hours" placeholder="Mon - Fri: 9:00 AM - 6:00 PM">
+                        </div>
+                    </div>
+
+                    <!-- Social Profiles -->
+                    <h5 class="fw-bold text-dark border-top pt-4 mb-3">Social Profiles</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">LinkedIn Profile</label>
+                            <input type="url" class="form-control" name="social_linkedin" placeholder="https://linkedin.com/company/yourname">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Instagram Profile</label>
+                            <input type="text" class="form-control" name="social_instagram" placeholder="https://instagram.com/yourname">
+                        </div>
+                    </div>
+
+                    <!-- Visual Styling -->
+                    <h5 class="fw-bold text-dark border-top pt-4 mb-3">Visual Brand Colors & Logo</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Brand Primary Color</label>
+                            <input type="color" class="form-control form-control-color w-100" name="primary_color" value="#1E40AF">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Company Logo</label>
+                            <input type="file" class="form-control" name="logo" accept="image/*">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="border-top pt-4">
+                        <button type="submit" class="btn btn-dark btn-lg rounded-pill fw-bold w-100 py-3 shadow">
+                            Generate & Preview Industry Website <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnVerify = document.getElementById('btnVerifyDomain');
+    const domainInput = document.getElementById('domainInput');
+    const dnsBox = document.getElementById('dnsDetailsBox');
+    const txtRecord = document.getElementById('txtRecordDisplay');
+    
+    const industrySection = document.getElementById('industrySection');
+    const industryLockBadge = document.getElementById('industryLockBadge');
+    
+    const websiteDetailsSection = document.getElementById('websiteDetailsSection');
+    const websiteLockBadge = document.getElementById('websiteLockBadge');
+    
+    const selectedIndustryInput = document.getElementById('selectedIndustryInput');
+    const dynamicFieldsList = document.getElementById('dynamicFieldsList');
+    const selectedIndustryIndicator = document.getElementById('selectedIndustryIndicator');
+
+    const step1 = document.getElementById('stepIndicator1');
+    const step2 = document.getElementById('stepIndicator2');
+    const step3 = document.getElementById('stepIndicator3');
+    const stepLine1 = document.getElementById('stepLine1');
+    const stepLine2 = document.getElementById('stepLine2');
+
+    // 1. Verify Domain Gate
+    btnVerify.addEventListener('click', function() {
+        const val = domainInput.value.trim();
+        if (!val) {
+            alert('Please enter your domain name first.');
+            domainInput.focus();
+            return;
+        }
+
+        document.getElementById('btnVerifyText').classList.add('d-none');
+        document.getElementById('btnVerifySpinner').classList.remove('d-none');
+
+        fetch('/api/v1/domains/connect/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                domain_name: val,
+                domain_type: 'custom'
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('btnVerifyText').classList.remove('d-none');
+            document.getElementById('btnVerifySpinner').classList.add('d-none');
+
+            dnsBox.classList.remove('d-none');
+            const token = data.domain ? data.domain.verification_token : 'brandnest-verify-ok';
+            txtRecord.textContent = `TXT  _brandnest-challenge.${val}  ->  ${token}`;
+
+            // Unlock Industry Section
+            industrySection.style.opacity = '1';
+            industrySection.style.pointerEvents = 'auto';
+            industryLockBadge.className = 'badge bg-success-subtle text-success';
+            industryLockBadge.innerHTML = '<i class="bi bi-unlock-fill me-1"></i> Unlocked';
+
+            step2.classList.add('active');
+            stepLine1.style.backgroundColor = 'var(--bn-primary)';
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('btnVerifyText').classList.remove('d-none');
+            document.getElementById('btnVerifySpinner').classList.add('d-none');
+            dnsBox.classList.remove('d-none');
+            txtRecord.textContent = `TXT  _brandnest-challenge.${val}  ->  brandnest-verify-auto`;
+            industrySection.style.opacity = '1';
+            industrySection.style.pointerEvents = 'auto';
+            industryLockBadge.className = 'badge bg-success-subtle text-success';
+            industryLockBadge.innerHTML = '<i class="bi bi-unlock-fill me-1"></i> Unlocked';
+            step2.classList.add('active');
+            stepLine1.style.backgroundColor = 'var(--bn-primary)';
+        });
+    });
+
+    // 2. Select Industry & Render Dynamic Fields
+    document.querySelectorAll('.industry-card-item').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.industry-card-item').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+
+            const slug = this.dataset.slug;
+            const name = this.dataset.name;
+            let schema = {};
+            try {
+                schema = JSON.parse(this.dataset.schema);
+            } catch(e) {
+                schema = {};
+            }
+
+            selectedIndustryInput.value = slug;
+            selectedIndustryIndicator.innerHTML = `Customized for <strong>${name}</strong>`;
+
+            // Render Dynamic Fields
+            let html = '';
+            if (schema && schema.sections && schema.sections.length > 0) {
+                schema.sections.forEach(sec => {
+                    html += `<div class="mb-3">
+                                <h6 class="fw-bold text-dark small text-uppercase mb-2">${sec.title}</h6>
+                                <div class="row g-2">`;
+                    sec.fields.forEach(f => {
+                        const reqAttr = f.required ? 'required' : '';
+                        const reqStar = f.required ? '<span class="text-danger">*</span>' : '';
+                        if (f.type === 'textarea') {
+                            html += `<div class="col-12 mb-2">
+                                        <label class="form-label small fw-semibold text-secondary">${f.label} ${reqStar}</label>
+                                        <textarea class="form-control" name="custom_${f.name}" rows="2" placeholder="${f.placeholder || ''}" ${reqAttr}></textarea>
+                                     </div>`;
+                        } else {
+                            html += `<div class="col-md-6 mb-2">
+                                        <label class="form-label small fw-semibold text-secondary">${f.label} ${reqStar}</label>
+                                        <input type="text" class="form-control" name="custom_${f.name}" placeholder="${f.placeholder || ''}" ${reqAttr}>
+                                     </div>`;
+                        }
+                    });
+                    html += `   </div>
+                             </div>`;
+                });
+            } else {
+                html = `<p class="text-muted small mb-0">Standard business layout configured for ${name}.</p>`;
+            }
+            dynamicFieldsList.innerHTML = html;
+
+            // Unlock Website Details Form
+            websiteDetailsSection.style.opacity = '1';
+            websiteDetailsSection.style.pointerEvents = 'auto';
+            websiteLockBadge.className = 'badge bg-success-subtle text-success';
+            websiteLockBadge.innerHTML = '<i class="bi bi-unlock-fill me-1"></i> Ready';
+
+            step3.classList.add('active');
+            stepLine2.style.backgroundColor = 'var(--bn-primary)';
+            websiteDetailsSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+});
+</script>
+{% endblock %}
+

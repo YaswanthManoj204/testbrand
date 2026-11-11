@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrandNest – Business cards and websites on your own domain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F2F2F2;
+      --ink: #16171A;
+      --mute: #9B9CA1;
+      --line: #E1E1E3;
+      --panel: #fff;
+      --blue: #53B0DC;
+      --red: #E8667D;
+      --yellow: #FFCE88;
+      --mist: #F2F6FA;
+      --purple: #7C7BE0;
+      --green: #55BB84;
+      --orange: #E99B63;
+      --f: "Onest", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: var(--f);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+      border-radius: 10px
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 28px
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.1
+    }
+
+    /* pill nav */
+    .top {
+      position: sticky;
+      top: 16px;
+      z-index: 30;
+      padding: 0 20px
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, .88);
+      backdrop-filter: blur(14px);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 10px 10px 22px;
+      box-shadow: 0 1px 0 var(--line)
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -.03em
+    }
+
+    .mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background: var(--ink);
+      position: relative;
+      overflow: hidden
+    }
+
+    .mark::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 6px;
+      width: 6px;
+      height: 18px;
+      background: linear-gradient(#fff, #8a8b90)
+    }
+
+    .mark::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 12px;
+      width: 9px;
+      height: 12px;
+      background: linear-gradient(#fff, #8a8b90);
+      clip-path: polygon(0 0, 100% 40%, 100% 100%, 0 100%)
+    }
+
+    .nav ul {
+      display: flex;
+      gap: 34px;
+      list-style: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: #55565B
+    }
+
+    .nav ul a:hover {
+      color: var(--ink)
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 600 15.5px var(--f);
+      padding: 13px 24px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: var(--ink);
+      color: #fff;
+      transition: background .2s
+    }
+
+    .pill:hover {
+      background: #34363c
+    }
+
+    .pill.light {
+      background: #fff;
+      color: var(--ink)
+    }
+
+    .pill.light:hover {
+      background: var(--mist)
+    }
+
+    .pill.sm {
+      padding: 10px 20px;
+      font-size: 14.5px
+    }
+
+    /* hero */
+    .hero {
+      position: relative;
+      padding: 92px 0 0
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -90px 0 auto 0;
+      height: 640px;
+      background:
+        radial-gradient(45% 60% at 92% 10%, rgba(83, 176, 220, .30), transparent 70%),
+        radial-gradient(35% 50% at 0% 70%, rgba(255, 206, 136, .28), transparent 70%);
+      pointer-events: none
+    }
+
+    .hero .wrap {
+      position: relative
+    }
+
+    .kicker {
+      color: var(--mute);
+      font-size: 17px;
+      margin-bottom: 34px
+    }
+
+    .statement {
+      font-size: clamp(30px, 4.5vw, 58px);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+      color: #A3A4A8;
+      max-width: 21em
+    }
+
+    .statement b {
+      color: var(--ink);
+      font-weight: 600
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+      flex-wrap: wrap
+    }
+
+    /* showcase */
+    .showcase {
+      position: relative;
+      max-width: 1000px;
+      height: 540px;
+      margin: 72px auto 0
+    }
+
+    .url {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      z-index: 3;
+      background: #fff;
+      border-radius: 999px;
+      padding: 12px 26px 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 17px;
+      box-shadow: 0 1px 0 var(--line), 0 14px 30px -14px rgba(0, 0, 0, .25)
+    }
+
+    .url::before {
+      content: "";
+      width: 14px;
+      height: 16px;
+      border-radius: 4px;
+      background: var(--ink)
+    }
+
+    .sc-browser {
+      position: absolute;
+      left: 0;
+      top: 92px;
+      width: 74%;
+      height: 430px;
+      background: #fff;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .35), 0 0 0 1px var(--line)
+    }
+
+    .sc-browser .hd {
+      height: 34px;
+      background: #F0F0F1;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      padding: 0 16px
+    }
+
+    .sc-browser .hd i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #CFCFD2
+    }
+
+    .sc-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+      font-size: 14px;
+      color: #6B6C72
+    }
+
+    .sc-nav b {
+      color: var(--ink);
+      font-size: 16px
+    }
+
+    .sc-nav span {
+      display: flex;
+      gap: 20px
+    }
+
+    .sc-hero {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      padding: 18px 28px 0
+    }
+
+    .sc-hero h5 {
+      font-size: 30px;
+      font-weight: 600;
+      letter-spacing: -.03em;
+      line-height: 1.1
+    }
+
+    .sc-hero p {
+      color: #6B6C72;
+      font-size: 14px;
+      margin: 12px 0 18px;
+      max-width: 30ch
+    }
+
+    .sc-hero .pill {
+      padding: 10px 18px;
+      font-size: 13.5px
+    }
+
+    .sc-form {
+      background: var(--mist);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      gap: 9px;
+      font-size: 12px;
+      color: #6B6C72
+    }
+
+    .sc-form i {
+      display: block;
+      height: 30px;
+      border-radius: 9px;
+      background: #fff;
+      box-shadow: 0 0 0 1px var(--line)
+    }
+
+    .sc-form em {
+      font-style: normal;
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 13.5px
+    }
+
+    .sc-form u {
+      display: block;
+      height: 30px;
+      border-radius: 99px;
+      background: var(--blue);
+      text-decoration: none
+    }
+
+    .sc-tiles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 22px 28px
+    }
+
+    .sc-tiles i {
+      height: 70px;
+      border-radius: 14px
+    }
+
+    .sc-tiles i:nth-child(1) {
+      background: var(--blue)
+    }
+
+    .sc-tiles i:nth-child(2) {
+      background: var(--yellow)
+    }
+
+    .sc-tiles i:nth-child(3) {
+      background: var(--red)
+    }
+
+    .sc-phone {
+      position: absolute;
+      right: 2%;
+      top: 70px;
+      width: 250px;
+      height: 450px;
+      transform: rotate(3deg);
+      background: #0b0b0d;
+      border-radius: 38px;
+      padding: 9px;
+      box-shadow: 0 0 0 2px #B65F3F, 0 40px 60px -24px rgba(0, 0, 0, .55);
+      z-index: 2
+    }
+
+    /* overview table */
+    .overview {
+      padding: 120px 0 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px
+    }
+
+    .overview .label {
+      color: var(--mute);
+      font-size: 16px;
+      margin-bottom: 22px
+    }
+
+    .overview h2 {
+      font-size: clamp(24px, 2.7vw, 34px);
+      font-weight: 500;
+      line-height: 1.28;
+      max-width: 20em
+    }
+
+    .rows {
+      align-self: end
+    }
+
+    .rows div {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 16px
+    }
+
+    .rows span {
+      color: var(--mute)
+    }
+
+    /* bento */
+    .bento {
+      padding: 70px 0 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px
+    }
+
+    .card {
+      background: var(--panel);
+      border-radius: 32px;
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden
+    }
+
+    .card.big {
+      grid-column: span 3;
+      min-height: 760px
+    }
+
+    .card.dark {
+      background: var(--ink);
+      color: #fff
+    }
+
+    .card.sm {
+      grid-column: span 2;
+      padding: 28px;
+      background: #FBFBFB
+    }
+
+    .card h3 {
+      font-size: 32px;
+      margin-bottom: 12px
+    }
+
+    .card>p {
+      color: #6B6C72;
+      max-width: 40ch
+    }
+
+    .dark>p {
+      color: #A9AAB0
+    }
+
+    .feat {
+      list-style: none;
+      margin: 22px 0 28px;
+      display: grid;
+      gap: 10px;
+      font-size: 15.5px
+    }
+
+    .feat li {
+      padding-left: 22px;
+      position: relative
+    }
+
+    .feat li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .62em;
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
+      background: var(--blue)
+    }
+
+    .dark .feat li::before {
+      background: var(--yellow)
+    }
+
+    .card .pill {
+      align-self: flex-start
+    }
+
+    .stage {
+      margin: 34px -34px -34px;
+      flex: 1;
+      min-height: 350px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .stage.blue {
+      background: var(--blue)
+    }
+
+    .phone {
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      width: 250px;
+      height: 420px;
+      transform: translateX(-50%) rotate(-4deg);
+      background: #0b0b0d;
+      border-radius: 38px;
+      padding: 9px;
+      box-shadow: 0 0 0 2px #B65F3F, 0 30px 50px -20px rgba(0, 0, 0, .5)
+    }
+
+    .ph {
+      background: #fff;
+      height: 100%;
+      border-radius: 30px;
+      padding: 30px 16px 0;
+      text-align: center;
+      font-size: 12px;
+      color: #6B6C72
+    }
+
+    .ph .av {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 8px auto 8px;
+      background: linear-gradient(140deg, var(--red), var(--yellow))
+    }
+
+    .ph h4 {
+      font-size: 17px;
+      color: var(--ink);
+      font-weight: 600
+    }
+
+    .ph .btns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin: 16px 0 10px
+    }
+
+    .ph .btns span {
+      background: var(--mist);
+      border-radius: 11px;
+      padding: 9px 0;
+      font-weight: 500;
+      color: var(--ink)
+    }
+
+    .ph .map {
+      height: 78px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, transparent 48%, #fff 48% 52%, transparent 52%), linear-gradient(0deg, transparent 42%, #fff 42% 47%, transparent 47%), #DDE8F0
+    }
+
+    .ph .qr {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      margin-top: 10px
+    }
+
+    .ph .qr i {
+      width: 38px;
+      height: 38px;
+      border-radius: 7px;
+      flex: none;
+      background: conic-gradient(var(--ink) 25%, #fff 0 50%, var(--ink) 0 75%, #fff 0) 0 0/9px 9px
+    }
+
+    /* device preview */
+    .stage.night {
+      background: #1F2024;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 20px
+    }
+
+    .modes {
+      display: flex;
+      gap: 6px;
+      background: #2C2D32;
+      border-radius: 999px;
+      padding: 5px
+    }
+
+    .modes button {
+      font: 500 13.5px var(--f);
+      color: #B6B7BC;
+      background: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 16px;
+      cursor: pointer
+    }
+
+    .modes button[aria-pressed=true] {
+      background: #fff;
+      color: var(--ink)
+    }
+
+    .frame {
+      margin-top: 22px;
+      width: 100%;
+      max-width: 100%;
+      transition: max-width .35s ease;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      color: var(--ink);
+      flex: 1
+    }
+
+    .frame[data-m=tablet] {
+      max-width: 300px
+    }
+
+    .frame[data-m=mobile] {
+      max-width: 190px
+    }
+
+    .frame .hd {
+      height: 28px;
+      background: #EEE;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      padding: 0 12px
+    }
+
+    .frame .hd i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #C9C9CC
+    }
+
+    .frame .bd {
+      padding: 22px 20px
+    }
+
+    .frame h5 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -.02em;
+      line-height: 1.15
+    }
+
+    .frame .ln {
+      height: 7px;
+      border-radius: 4px;
+      background: #E7E7E9;
+      margin-top: 9px
+    }
+
+    .frame .ln.s {
+      width: 60%
+    }
+
+    .frame .cta {
+      margin-top: 16px;
+      height: 30px;
+      width: 96px;
+      border-radius: 99px;
+      background: var(--ink)
+    }
+
+    .frame .tiles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 20px
+    }
+
+    .frame .tiles i {
+      height: 56px;
+      border-radius: 10px
+    }
+
+    .frame .tiles i:nth-child(1) {
+      background: var(--blue)
+    }
+
+    .frame .tiles i:nth-child(2) {
+      background: var(--yellow)
+    }
+
+    .frame .tiles i:nth-child(3) {
+      background: var(--red)
+    }
+
+    .frame[data-m=mobile] .tiles {
+      grid-template-columns: 1fr 1fr
+    }
+
+    /* info cards */
+    .sm .t {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      margin-bottom: 18px
+    }
+
+    .sm .t b {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      background: var(--c)
+    }
+
+    .sm .in {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 0 0 1px var(--line);
+      flex: 1
+    }
+
+    .sm .cap {
+      color: var(--mute);
+      font-size: 14.5px;
+      margin-bottom: 16px
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .chips span {
+      font-size: 14.5px;
+      padding: 8px 14px;
+      border-radius: 99px;
+      background: var(--mist)
+    }
+
+    .chips span.more {
+      background: var(--ink);
+      color: #fff
+    }
+
+    .reach div {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 15.5px
+    }
+
+    .reach div:last-child {
+      border: 0;
+      padding-bottom: 0
+    }
+
+    .reach div:first-child {
+      padding-top: 0
+    }
+
+    .reach i {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--c)
+    }
+
+    .qrbig {
+      display: flex;
+      gap: 18px;
+      align-items: center
+    }
+
+    .qrbig i {
+      flex: none;
+      width: 96px;
+      height: 96px;
+      border-radius: 14px;
+      border: 8px solid #fff;
+      outline: 1px solid var(--line);
+      background: conic-gradient(var(--ink) 25%, #fff 0 50%, var(--ink) 0 75%, #fff 0) 0 0/12px 12px
+    }
+
+    .qrbig p {
+      font-size: 15px;
+      color: #6B6C72;
+      line-height: 1.45
+    }
+
+    .qrbig b {
+      display: block;
+      color: var(--ink);
+      font-weight: 600
+    }
+
+    /* timeline */
+    .flow {
+      padding: 130px 0 0
+    }
+
+    .flow .head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      margin-bottom: 70px
+    }
+
+    .flow .head p {
+      color: #A3A4A8;
+      font-size: clamp(22px, 2.4vw, 30px);
+      line-height: 1.3;
+      font-weight: 500;
+      letter-spacing: -.02em
+    }
+
+    .flow .head p b {
+      color: var(--ink);
+      font-weight: 600
+    }
+
+    .gantt {
+      position: relative
+    }
+
+    .step {
+      position: relative;
+      height: 96px
+    }
+
+    .step em {
+      font-style: normal;
+      font-size: 19px;
+      position: absolute;
+      top: 0
+    }
+
+    .step .bar {
+      position: absolute;
+      top: 36px;
+      height: 11px;
+      border-radius: 99px;
+      background: var(--c)
+    }
+
+    .step .bar::after {
+      content: "";
+      position: absolute;
+      right: -9px;
+      top: -10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--c) 0 5px, rgba(255, 255, 255, .85) 6px)
+    }
+
+    .step small {
+      position: absolute;
+      top: 62px;
+      color: var(--mute);
+      font-size: 14.5px
+    }
+
+    .ruler {
+      height: 34px;
+      margin-top: 20px;
+      background: repeating-linear-gradient(90deg, var(--blue) 0 2px, transparent 2px 14px);
+      -webkit-mask: linear-gradient(90deg, #000, #000);
+      position: relative
+    }
+
+    .ruler::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--red) 0, var(--red) 18%, var(--blue) 18%, var(--blue) 42%, var(--purple) 42%, var(--purple) 70%, var(--green) 70%);
+      mix-blend-mode: lighten;
+      opacity: 0
+    }
+
+    .ruler {
+      background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 14px);
+      color: var(--purple);
+      -webkit-mask-image: none
+    }
+
+    .ends {
+      display: flex;
+      justify-content: space-between;
+      color: var(--mute);
+      font-size: 15px;
+      margin-top: 12px
+    }
+
+    /* closing band */
+    .band {
+      margin-top: 130px;
+      border-radius: 36px;
+      padding: 96px 40px;
+      text-align: center;
+      background: linear-gradient(90deg, #9DC7DD 0%, #D8A2AD 38%, #EFC9A0 66%, #E6E8EC 100%)
+    }
+
+    .band h2 {
+      font-size: clamp(32px, 4.4vw, 56px);
+      max-width: 15em;
+      margin: 0 auto 14px
+    }
+
+    .band p {
+      max-width: 44ch;
+      margin: 0 auto 34px;
+      color: #3A3B40
+    }
+
+    footer {
+      padding: 48px 0 40px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: var(--mute);
+      font-size: 14.5px;
+      align-items: center
+    }
+
+    @media (prefers-reduced-motion:no-preference) {
+      .showcase {
+        animation: up .9s cubic-bezier(.2, .7, .2, 1) both .1s
+      }
+
+      @keyframes up {
+        from {
+          opacity: 0;
+          transform: translateY(30px)
+        }
+
+        to {
+          opacity: 1;
+          transform: none
+        }
+      }
+    }
+
+    @media (max-width:980px) {
+      .nav ul {
+        display: none
+      }
+
+      .overview,
+      .flow .head {
+        grid-template-columns: 1fr;
+        gap: 36px
+      }
+
+      .card.big,
+      .card.sm {
+        grid-column: span 6
+      }
+
+      .card.big {
+        min-height: 0
+      }
+
+      .sc-browser {
+        width: 100%
+      }
+
+      .sc-phone {
+        width: 200px;
+        height: 370px;
+        top: 210px;
+        right: 0
+      }
+
+      .showcase {
+        height: 620px
+      }
+    }
+
+    @media (max-width:620px) {
+      body {
+        font-size: 16px
+      }
+
+      .wrap {
+        padding: 0 20px
+      }
+
+      .card {
+        padding: 26px;
+        border-radius: 26px
+      }
+
+      .stage {
+        margin: 30px -26px -26px
+      }
+
+      .sc-hero {
+        grid-template-columns: 1fr
+      }
+
+      .sc-form {
+        display: none
+      }
+
+      .sc-phone {
+        width: 170px;
+        height: 320px;
+        top: 300px
+      }
+
+      .showcase {
+        height: 660px
+      }
+
+      .step em {
+        font-size: 16px
+      }
+
+      .step small {
+        display: none
+      }
+
+      .step {
+        height: 70px
+      }
+
+      .band {
+        padding: 64px 22px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top">
+    <nav class="nav" aria-label="Main">
+      <a href="{% url 'landing' %}" class="logo"><span class="mark"></span>BrandNest</a>
+      <ul>
+        <li><a href="#build">What you can build</a></li>
+        <li><a href="{% url 'card_builder' %}">Create Card</a></li>
+        <li><a href="{% url 'card_list' %}">Manage Cards</a></li>
+        <li><a href="{% url 'website_builder' %}">Website builder</a></li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:10px;">
+        {% if user.is_authenticated %}
+        {% if user.is_staff or user.is_superuser %}
+        <a class="pill sm dark" href="/admin/" target="_blank" style="background:#0F172A;color:#fff;text-decoration:none;">
+          <i class="bi bi-shield-lock-fill"></i> Admin
+        </a>
+        {% endif %}
+        <span style="font-size:14.5px;color:var(--ink);font-weight:600;display:inline-flex;align-items:center;gap:6px;">
+          <i class="bi bi-person-circle text-primary"></i> {{ user.first_name|default:user.username }}
+        </span>
+        <a class="pill sm light" href="{% url 'logout' %}">Sign Out</a>
+        {% else %}
+        <a class="pill sm light" href="{% url 'login' %}">Log In</a>
+        <a class="pill sm" href="{% url 'signup' %}">Sign Up</a>
+        {% endif %}
+      </div>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <p class="kicker">What is BrandNest?</p>
+      <h1 class="statement">BrandNest turns your business details into <b>a live business card or website on your own
+          domain,</b> with no code to write and a preview before anything goes public.</h1>
+      <div class="hero-actions">
+        <a class="pill" href="#build">Start building</a>
+        <a class="pill light" href="#how">See how it works</a>
+      </div>
+
+      <div class="showcase" aria-hidden="true">
+        <div class="url">www.sunrisedental.in</div>
+        <div class="sc-browser">
+          <div class="hd"><i></i><i></i><i></i></div>
+          <div class="sc-nav"><b>Sunrise Dental</b><span><i style="font-style:normal">Services</i><i
+                style="font-style:normal">About</i><i style="font-style:normal">Contact</i></span></div>
+          <div class="sc-hero">
+            <div>
+              <h5>Gentle dental care for the whole family</h5>
+              <p>Book a visit in two minutes. We reply the same day.</p>
+              <a href="{% url 'website_builder' %}" class="pill">Book appointment</a>
+            </div>
+            <div class="sc-form"><em>Enquiry</em><i></i><i></i><u></u></div>
+          </div>
+          <div class="sc-tiles"><i></i><i></i><i></i></div>
+        </div>
+        <div class="sc-phone">
+          <div class="ph">
+            <div class="av"></div>
+            <h4>Dr. Meera Nair</h4>
+            <span>Dentist, Thiruvananthapuram</span>
+            <div class="btns"><span>Call</span><span>Email</span><span>WhatsApp</span></div>
+            <div class="map"></div>
+            <div class="qr"><i></i>Scan to save this card</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="overview">
+      <div>
+        <p class="label">Overview</p>
+        <h2>One place to connect a domain, add your details, check the result on every screen size and publish.</h2>
+      </div>
+      <div class="rows">
+        <div><span>You can build</span>Business card or website</div>
+        <div><span>Industries</span>Technology, healthcare, restaurants, education, construction and more</div>
+        <div><span>Domain</span>Your own, connected first</div>
+        <div><span>Hosting</span>Hostinger Cloud ready</div>
+      </div>
+    </section>
+
+    <section class="bento" id="build" aria-label="What you can build">
+      <article class="card big">
+        <h3>Business card</h3>
+        <p>A mobile-first digital card for entrepreneurs, consultants and professionals who want to be easy to reach.
+        </p>
+        <ul class="feat">
+          <li>Tap to call, email or message on WhatsApp</li>
+          <li>Google Maps location pin</li>
+          <li>QR code that opens your card when scanned</li>
+          <li>Link your existing website, or build one in a click</li>
+        </ul>
+        <a class="pill" href="{% url 'card_builder' %}">Build business card</a>
+        <div class="stage blue" aria-hidden="true">
+          <div class="phone">
+            <div class="ph">
+              <div class="av"></div>
+              <h4>Anita Raj</h4>Interior consultant, Kochi
+              <div class="btns"><span>Call</span><span>Email</span><span>WhatsApp</span></div>
+              <div class="map"></div>
+              <div class="qr"><i></i>Scan to save this card</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card big dark">
+        <h3>Website</h3>
+        <p>A multi-section site shaped around your trade, with forms that fit the way your industry takes enquiries.</p>
+        <ul class="feat">
+          <li>Industry-specific forms and sections</li>
+          <li>Working contact and enquiry form</li>
+          <li>PHP files ready for Hostinger Cloud</li>
+          <li>Custom domain connected from the start</li>
+        </ul>
+        <a class="pill light" href="{% url 'website_builder' %}">Make your website</a>
+        <div class="stage night">
+          <div class="modes" role="group" aria-label="Preview size">
+            <button aria-pressed="true" data-m="desktop">Desktop</button>
+            <button aria-pressed="false" data-m="tablet">Tablet</button>
+            <button aria-pressed="false" data-m="mobile">Mobile</button>
+          </div>
+          <div class="frame" id="frame" data-m="desktop">
+            <div class="hd"><i></i><i></i><i></i></div>
+            <div class="bd">
+              <h5>Sunrise Dental Clinic</h5>
+              <div class="ln"></div>
+              <div class="ln s"></div>
+              <div class="cta"></div>
+              <div class="tiles"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card sm">
+        <div class="t"><b style="--c:var(--green)"></b>Built for your trade</div>
+        <div class="in">
+          <p class="cap">Pick an industry and get sections and forms that fit it.</p>
+          <div class="chips">
+            <span>Technology</span><span>Healthcare</span><span>Restaurants</span><span>Education</span><span>Construction</span><span
+              class="more">+3 more</span>
+          </div>
+        </div>
+      </article>
+      <article class="card sm">
+        <div class="t"><b style="--c:var(--orange)"></b>Easy for customers to reach you</div>
+        <div class="in reach">
+          <div style="--c:var(--blue)"><i></i>Tap to call</div>
+          <div style="--c:var(--red)"><i></i>Tap to email</div>
+          <div style="--c:var(--green)"><i></i>Message on WhatsApp</div>
+          <div style="--c:var(--yellow)"><i></i>Enquiry form on your site</div>
+        </div>
+      </article>
+      <article class="card sm">
+        <div class="t"><b style="--c:var(--purple)"></b>Share it anywhere</div>
+        <div class="in">
+          <div class="qrbig"><i></i>
+            <p><b>QR code included</b>Print it on a shop board or flyer. One scan opens your card.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="flow" id="how">
+      <div class="head">
+        <h2 style="font-size:clamp(32px,4vw,52px)">From domain to live page</h2>
+        <p>Four steps, <b>in the order you do them.</b> Nothing goes public until you have checked the preview.</p>
+      </div>
+      <div class="gantt">
+        <div class="step" style="--c:var(--red)"><em style="left:2%">Connect domain</em><span class="bar"
+            style="left:2%;width:14%"></span><small style="left:2%">Point the domain you own at BrandNest</small></div>
+        <div class="step" style="--c:var(--blue)"><em style="left:20%">Enter details</em><span class="bar"
+            style="left:20%;width:22%"></span><small style="left:20%">Name, contact info, location, industry</small>
+        </div>
+        <div class="step" style="--c:var(--purple)"><em style="left:46%">Check preview</em><span class="bar"
+            style="left:46%;width:20%"></span><small style="left:46%">Desktop, tablet and mobile</small></div>
+        <div class="step" style="--c:var(--green)"><em style="left:70%">Publish</em><span class="bar"
+            style="left:70%;width:14%"></span><small style="left:70%">Deploy to your hosting</small></div>
+        <div class="ruler" aria-hidden="true"></div>
+        <div class="ends"><span>Your domain</span><span>Live</span></div>
+      </div>
+    </section>
+
+    <section class="band" id="start">
+      <h2>Your business, online under your own name</h2>
+      <p>Choose a card or a website. You can see exactly how it looks before you publish.</p>
+      <a class="pill" href="#build">Start building</a>
+    </section>
+
+    <footer>
+      <a href="{% url 'landing' %}" class="logo"><span class="mark"></span>BrandNest</a>
+      <span>Powered by Django REST API and Hostinger Cloud</span>
+    </footer>
+  </main>
+
+  <script>
+    var frame = document.getElementById('frame'), btns = document.querySelectorAll('.modes button');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        frame.setAttribute('data-m', b.dataset.m);
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b) });
+      })
+    });
+  </script>
+</body>
+
+</html>

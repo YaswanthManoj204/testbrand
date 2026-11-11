@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log In – BrandNest | Sign In to Your Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root {
+  --bg: #F2F2F2;
+  --ink: #16171A;
+  --mute: #8E8F95;
+  --line: #E1E1E3;
+  --panel: #FFFFFF;
+  --field: #F6F7F9;
+  --blue: #53B0DC;
+  --blue-dark: #0084FF;
+  --red: #E8667D;
+  --green: #55BB84;
+  --purple: #7C7BE0;
+  --yellow: #FFCE88;
+  --mist: #F2F6FA;
+  --f: "Onest", "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--f);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  background:
+    radial-gradient(45% 55% at 88% 12%, rgba(83, 176, 220, 0.28), transparent 70%),
+    radial-gradient(40% 50% at 8% 85%, rgba(255, 206, 136, 0.22), transparent 70%),
+    radial-gradient(35% 45% at 50% 50%, rgba(124, 123, 224, 0.08), transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 10px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; width: 100%; }
+
+/* Glassmorphic Nav */
+.top { position: sticky; top: 16px; z-index: 30; padding: 0 20px; }
+.nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 10px 22px;
+  box-shadow: 0 1px 0 var(--line);
+}
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.03em; }
+.mark { width: 30px; height: 30px; border-radius: 9px; background: var(--ink); position: relative; overflow: hidden; }
+.mark::before { content: ""; position: absolute; left: 8px; top: 6px; width: 6px; height: 18px; background: linear-gradient(#fff, #8a8b90); }
+.mark::after { content: ""; position: absolute; left: 14px; top: 12px; width: 9px; height: 12px; background: linear-gradient(#fff, #8a8b90); clip-path: polygon(0 0, 100% 40%, 100% 100%, 0 100%); }
+.nav ul { display: flex; gap: 28px; list-style: none; font-size: 15px; font-weight: 500; color: #55565B; align-items: center; }
+.nav ul a:hover { color: var(--ink); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: 600 15px var(--f);
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  background: var(--ink);
+  color: #fff;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.pill:hover { background: #34363c; transform: translateY(-1px); }
+.pill.light { background: #fff; color: var(--ink); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.pill.light:hover { background: var(--mist); border-color: #D2D4DA; }
+.pill.sm { padding: 9px 18px; font-size: 14px; }
+.pill.full { width: 100%; padding: 15px; font-size: 16px; margin-top: 10px; }
+
+/* Main Auth Section */
+.auth-section {
+  position: relative;
+  z-index: 1;
+  padding: 40px 0 70px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* Left Showcase */
+.showcase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 22px;
+}
+.showcase-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 0 3px rgba(83, 176, 220, 0.25);
+}
+.auth-headline {
+  font-size: clamp(30px, 3.8vw, 44px);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  color: #7E8086;
+  margin-bottom: 20px;
+}
+.auth-headline b {
+  color: var(--ink);
+  font-weight: 700;
+}
+.auth-sub {
+  font-size: 16px;
+  color: #63646A;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 48ch;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.feature-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  color: var(--ink);
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+.feature-text b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.feature-text span {
+  font-size: 13.5px;
+  color: var(--mute);
+  line-height: 1.45;
+}
+
+/* Mini Showcase Card Mockup */
+.mini-preview-card {
+  background: linear-gradient(135deg, #0E131F 0%, #161E2E 100%);
+  border-radius: 24px;
+  padding: 20px 24px;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.4);
+  max-width: 440px;
+}
+.mini-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.mini-avatar-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mini-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #3B82F6 url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80') center/cover;
+  border: 2px solid #60A5FA;
+}
+.mini-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+.mini-role {
+  font-size: 12px;
+  color: #94A3B8;
+}
+.mini-qr-badge {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #E2E8F0;
+}
+.mini-pills-row {
+  display: flex;
+  gap: 8px;
+}
+.mini-pill {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #CBD5E1;
+}
+.mini-pill.primary {
+  background: var(--blue-dark);
+  color: #FFFFFF;
+}
+
+/* Right Card Panel */
+.auth-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  padding: 40px 42px;
+  box-shadow: 0 15px 45px -10px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.auth-card-hd {
+  margin-bottom: 26px;
+}
+.auth-card-title {
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.auth-card-desc {
+  font-size: 14.5px;
+  color: var(--mute);
+}
+
+/* Alert Notification Banners */
+.alert-box {
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.45;
+}
+.alert-box.error {
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  color: #BE123C;
+}
+.alert-box.success {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  color: #15803D;
+}
+.alert-box.info {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #1D4ED8;
+}
+
+/* Social Buttons */
+.social-auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.btn-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  background: #FFFFFF;
+  color: var(--ink);
+  font: 600 14px var(--f);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  text-decoration: none;
+}
+.btn-social:hover {
+  background: var(--mist);
+  border-color: #D2D4DA;
+  transform: translateY(-1px);
+}
+.social-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 22px 0;
+  color: var(--mute);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.auth-divider::before, .auth-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--line);
+}
+.auth-divider span {
+  padding: 0 14px;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 18px;
+}
+.form-label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2D2F35;
+}
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-prefix-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--mute);
+  font-size: 16px;
+  pointer-events: none;
+}
+.form-input {
+  width: 100%;
+  font: 400 15px var(--f);
+  color: var(--ink);
+  background: var(--field);
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  padding: 13px 15px 13px 42px;
+  transition: all 0.2s;
+}
+.form-input:hover {
+  background: #ECEEF2;
+}
+.form-input:focus {
+  outline: 0;
+  background: #FFFFFF;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgba(83, 176, 220, 0.18);
+}
+.btn-toggle-pwd {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--mute);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: color 0.15s;
+}
+.btn-toggle-pwd:hover {
+  color: var(--ink);
+}
+
+/* Remember Me & Forgot Password Row */
+.form-extra-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+}
+.form-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #4B4C52;
+  cursor: pointer;
+}
+.form-checkbox-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--ink);
+  cursor: pointer;
+  border-radius: 5px;
+}
+.forgot-password-link {
+  color: #4B4C52;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.forgot-password-link:hover {
+  color: var(--blue-dark);
+  text-decoration: underline;
+}
+
+/* Footer Link */
+.auth-switch-text {
+  text-align: center;
+  font-size: 14.5px;
+  color: #55565B;
+  margin-top: 24px;
+}
+.auth-switch-text a {
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.auth-switch-text a:hover {
+  color: var(--blue-dark);
+}
+
+/* Footer */
+footer {
+  padding: 34px 0 30px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  color: var(--mute);
+  font-size: 14px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 980px) {
+  .nav ul { display: none; }
+  .auth-grid { grid-template-columns: 1fr; gap: 36px; }
+  .auth-showcase { display: none; }
+  .auth-card { padding: 32px 24px; }
+}
+@media (max-width: 540px) {
+  .social-auth-grid { grid-template-columns: 1fr; }
+  .auth-card { border-radius: 24px; padding: 26px 18px; }
+  .auth-card-title { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<div class="top">
+  <nav class="nav" aria-label="Main Navigation">
+    <a href="{% url 'landing' %}" class="logo"><span class="mark"></span>BrandNest</a>
+    <ul>
+      <li><a href="{% url 'landing' %}#modules">Modules</a></li>
+      <li><a href="{% url 'card_builder' %}">Business Card</a></li>
+      <li><a href="{% url 'website_builder' %}">Website Builder</a></li>
+    </ul>
+    <a class="pill sm light" href="{% url 'signup' %}">Don't have an account? <b>Sign Up</b></a>
+  </nav>
+</div>
+
+<!-- Main Auth Container -->
+<main class="auth-section">
+  <div class="wrap">
+    <div class="auth-grid">
+      <!-- Left Column: Branding Showcase -->
+      <div class="auth-showcase">
+        <div class="showcase-badge">
+          <span class="showcase-dot"></span> Welcome Back
+        </div>
+        <h1 class="auth-headline">
+          Manage your cards & websites <b>all in one place.</b>
+        </h1>
+        <p class="auth-sub">
+          Log in to access your digital business cards, view live analytics, customize brand themes, and manage domain routing.
+        </p>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-person-vcard"></i></div>
+            <div class="feature-text">
+              <b>Instant Live Updates</b>
+              <span>Edit your contact details, capabilities, or branding anytime with zero downtime.</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-qr-code-scan"></i></div>
+            <div class="feature-text">
+              <b>Permanent Smart QR Codes</b>
+              <span>Your QR codes and NFC chips remain active and seamlessly self-heal across server restarts.</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+            <div class="feature-text">
+              <b>Enterprise SSL & Fast Cloud</b>
+              <span>All public cards and company sites are delivered with HTTPS security and global edge caching.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Mini Mockup Card -->
+        <div class="mini-preview-card">
+          <div class="mini-preview-header">
+            <div class="mini-avatar-block">
+              <div class="mini-avatar"></div>
+              <div>
+                <div class="mini-name">Marcus Vance</div>
+                <div class="mini-role">Managing Director • Apex Advisory</div>
+              </div>
+            </div>
+            <div class="mini-qr-badge">
+              <i class="bi bi-check-circle-fill text-success"></i> Verified
+            </div>
+          </div>
+          <div class="mini-pills-row">
+            <div class="mini-pill primary"><i class="bi bi-person-plus-fill me-1"></i> Save Contact</div>
+            <div class="mini-pill"><i class="bi bi-globe me-1"></i> Website</div>
+            <div class="mini-pill"><i class="bi bi-telephone me-1"></i> Call Us</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Login Card -->
+      <div class="auth-card-col">
+        <div class="auth-card">
+          <div class="auth-card-hd">
+            <h2 class="auth-card-title">Welcome back</h2>
+            <p class="auth-card-desc">Sign in to your BrandNest account to continue.</p>
+          </div>
+
+          <!-- Alert Messages -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert-box {% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+                <i class="bi {% if message.tags == 'error' %}bi-exclamation-triangle-fill{% elif message.tags == 'success' %}bi-check-circle-fill{% else %}bi-info-circle-fill{% endif %}"></i>
+                <div>{{ message }}</div>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <!-- Social Quick Signins -->
+          <div class="social-auth-grid">
+            <button type="button" class="btn-social" onclick="alert('Google authentication will be activated upon OAuth provider configuration.');">
+              <svg class="social-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Google</span>
+            </button>
+            <button type="button" class="btn-social" onclick="alert('GitHub authentication will be activated upon OAuth provider configuration.');">
+              <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+              <span>GitHub</span>
+            </button>
+          </div>
+
+          <div class="auth-divider">
+            <span>Or sign in with email</span>
+          </div>
+
+          <!-- Login Form -->
+          <form method="post" action="{% url 'login' %}" id="loginForm">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next|default:'' }}">
+
+            <!-- Email or Username -->
+            <div class="form-group">
+              <label for="loginIdentifierInput" class="form-label">Email or Username</label>
+              <div class="input-with-icon">
+                <i class="bi bi-person input-prefix-icon"></i>
+                <input type="text" id="loginIdentifierInput" name="login_identifier" class="form-input" placeholder="name@company.com or username" value="{{ login_identifier|default:'' }}" required autofocus>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="loginPasswordInput" class="form-label">Password</label>
+              <div class="input-with-icon">
+                <i class="bi bi-lock input-prefix-icon"></i>
+                <input type="password" id="loginPasswordInput" name="password" class="form-input" placeholder="Enter your password" required>
+                <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility('loginPasswordInput', this)" title="Show/Hide Password">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-extra-row">
+              <label class="form-checkbox-label">
+                <input type="checkbox" name="remember_me" value="1" checked>
+                <span>Remember me</span>
+              </label>
+              <a href="#" class="forgot-password-link" onclick="alert('Password reset instructions will be sent to your registered email address.'); return false;">Forgot password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="pill full">
+              <span>Sign in to BrandNest</span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </form>
+
+          <p class="auth-switch-text">
+            Don't have an account yet? <a href="{% url 'signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Create an account</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<div class="wrap">
+  <footer>
+    <div class="logo"><span class="mark"></span>BrandNest</div>
+    <div>Digital Business Card & Website Platform • Powered by Django REST API</div>
+  </footer>
+</div>
+
+<script>
+function togglePasswordVisibility(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  const icon = btn.querySelector('i');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    if (icon) {
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    }
+  } else {
+    inp.type = 'password';
+    if (icon) {
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  }
+}
+</script>
+
+</body>
+</html>
+

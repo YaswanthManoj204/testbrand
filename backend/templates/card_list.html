@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Cards Manager · BrandNest SaaS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #087cff;
+            --primary-dark: #0056b3;
+            --ink: #0F172A;
+            --muted: #64748B;
+            --bg: #F8FAFC;
+            --card-border: #E2E8F0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .brand-logo {
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+            transition: transform .15s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        .card-item {
+            background: #ffffff;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+            transition: all .2s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .card-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+            border-color: #CBD5E1;
+        }
+        .card-item-cover {
+            height: 90px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        .card-item-body {
+            padding: 16px 20px 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-item-avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            object-fit: cover;
+            margin-top: -38px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #ffffff;
+        }
+        .card-item-actions {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .empty-state {
+            background: #ffffff;
+            border: 2px dashed var(--card-border);
+            border-radius: 24px;
+            padding: 60px 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top py-3">
+        <div class="container">
+            <a class="brand-logo" href="{% url 'landing' %}">
+                <i class="bi bi-layers-fill"></i> BrandNest
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'card_builder' %}" class="btn btn-primary rounded-pill px-3 py-2 fw-semibold">
+                    <i class="bi bi-plus-lg me-1"></i> Create Card
+                </a>
+                <a href="/admin/" class="btn btn-outline-dark rounded-pill px-3 py-2 fw-semibold" target="_blank">
+                    <i class="bi bi-shield-lock-fill me-1"></i> Super Admin
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container py-4 py-md-5">
+
+        <!-- Django Messages -->
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Header Row -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Digital Business Cards</h2>
+                <p class="text-muted mb-0">Manage, preview, edit, or delete all digital business cards in BrandNest.</p>
+            </div>
+            <a href="{% url 'card_builder' %}" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold">
+                <i class="bi bi-plus-circle me-1"></i> New Business Card
+            </a>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold text-uppercase">Total Cards</span>
+                            <h3 class="fw-bold mb-0 mt-1">{{ total_count }}</h3>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-4 p-3 fs-4">
+                            <i class="bi bi-id-card"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold text-uppercase">Active &amp; Published</span>
+                            <h3 class="fw-bold mb-0 mt-1 text-success">{{ published_count }}</h3>
+                        </div>
+                        <div class="bg-success bg-opacity-10 text-success rounded-4 p-3 fs-4">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold text-uppercase">Total Card Views</span>
+                            <h3 class="fw-bold mb-0 mt-1 text-info">{{ total_views }}</h3>
+                        </div>
+                        <div class="bg-info bg-opacity-10 text-info rounded-4 p-3 fs-4">
+                            <i class="bi bi-eye"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        {% if cards %}
+        <div class="row g-4">
+            {% for c in cards %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card-item">
+                    <div class="card-item-cover" style="{% if c.banner_image %}background-image: url('{{ c.banner_image.url }}');{% else %}background: linear-gradient(135deg, {{ c.theme_color|default:'#087cff' }}, #6366f1);{% endif %}">
+                        <span class="badge position-absolute top-0 end-0 m-2 rounded-pill {% if c.is_published %}bg-success{% else %}bg-secondary{% endif %}">
+                            {% if c.is_published %}Published{% else %}Draft{% endif %}
+                        </span>
+                    </div>
+                    <div class="card-item-body">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            {% if c.profile_image %}
+                            <img src="{{ c.profile_image.url }}" alt="{{ c.owner_name }}" class="card-item-avatar">
+                            {% elif c.profile_photo %}
+                            <img src="{{ c.profile_photo.url }}" alt="{{ c.owner_name }}" class="card-item-avatar">
+                            {% else %}
+                            <div class="card-item-avatar d-flex align-items-center justify-content-center bg-light text-primary fw-bold fs-5">
+                                {{ c.owner_name|slice:":1"|default:"B" }}
+                            </div>
+                            {% endif %}
+                            <span class="text-muted small" title="Total Views">
+                                <i class="bi bi-eye me-1"></i> {{ c.views_count }} views
+                            </span>
+                        </div>
+
+                        <h5 class="fw-bold mb-1 text-truncate" title="{{ c.business_name }}">{{ c.business_name|default:"Untitled Business" }}</h5>
+                        <p class="text-muted small mb-2 text-truncate">{{ c.owner_name }}{% if c.tagline %} · {{ c.tagline }}{% endif %}</p>
+
+                        <div class="small text-muted mb-3">
+                            <span class="badge bg-light text-dark border me-1"><i class="bi bi-hash"></i> {{ c.card_id }}</span>
+                            <span>{{ c.created_at|date:"M d, Y" }}</span>
+                        </div>
+
+                        <div class="card-item-actions">
+                            <a href="{% url 'card_preview' card_id=c.card_id %}" class="btn btn-sm btn-primary rounded-pill px-3" title="Interactive Phone Preview">
+                                <i class="bi bi-phone me-1"></i> Preview
+                            </a>
+                            <a href="{% url 'card_edit' card_id=c.card_id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3" title="Edit in Builder">
+                                <i class="bi bi-pencil me-1"></i> Edit
+                            </a>
+                            <a href="{% url 'card_standalone' slug=c.slug %}" target="_blank" class="btn btn-sm btn-outline-dark rounded-pill px-2" title="Public Standalone Card">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </a>
+                            <a href="{% url 'card_delete' card_id=c.card_id %}" class="btn btn-sm btn-outline-danger rounded-pill px-2 ms-auto"
+                               onclick="return confirm('Permanently delete the business card for {{ c.business_name|escapejs }}?');" title="Delete Card">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="text-muted display-4 mb-3">
+                <i class="bi bi-card-heading"></i>
+            </div>
+            <h4 class="fw-bold mb-2">No Business Cards Yet</h4>
+            <p class="text-muted mb-4" style="max-width: 460px; margin: 0 auto;">
+                All dummy data has been removed. Create your first digital business card with live interactive preview, custom branding, and NFC/QR ready share links.
+            </p>
+            <a href="{% url 'card_builder' %}" class="btn btn-primary btn-lg rounded-pill px-4 shadow">
+                <i class="bi bi-plus-circle me-1"></i> Create Your First Card
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

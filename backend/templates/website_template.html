@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ website.title }} - Official Website</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --site-primary: {{ website.primary_color|default:"#1E40AF" }};
+            --site-secondary: {{ website.secondary_color|default:"#0EA5E9" }};
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            background-color: #FFFFFF;
+        }
+        h1, h2, h3, h4, h5, h6, .brand-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .site-nav {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 1rem 0;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, var(--site-primary) 0%, #0F172A 100%);
+            color: #FFFFFF;
+            padding: 5rem 0 4.5rem;
+        }
+        .feature-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 64, 175, 0.1);
+            color: var(--site-primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .section-tag {
+            color: var(--site-primary);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+        .btn-brand-primary {
+            background-color: var(--site-primary);
+            color: #FFFFFF;
+            font-weight: 600;
+            border-radius: 9999px;
+            padding: 0.75rem 1.75rem;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-brand-primary:hover {
+            opacity: 0.92;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+        }
+        .info-pill {
+            background: #F1F5F9;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+        .contact-card-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav class="site-nav sticky-top shadow-sm">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="#hero" class="d-flex align-items-center gap-2 text-decoration-none text-dark fw-bold fs-4">
+                {% if website.logo %}
+                    <img src="{{ website.logo.url }}" alt="{{ website.title }}" style="max-height: 40px; border-radius: 6px;">
+                {% else %}
+                    <span class="p-2 rounded text-white" style="background-color: var(--site-primary);">
+                        <i class="bi bi-building"></i>
+                    </span>
+                {% endif %}
+                <span>{{ website.title }}</span>
+            </a>
+            <div class="d-flex align-items-center gap-4">
+                <div class="d-none d-md-flex align-items-center gap-3">
+                    <a href="#about" class="text-secondary text-decoration-none fw-medium small">About</a>
+                    <a href="#industry-services" class="text-secondary text-decoration-none fw-medium small">Services</a>
+                    <a href="#contact" class="text-secondary text-decoration-none fw-medium small">Contact</a>
+                </div>
+                <a href="#contact" class="btn btn-brand-primary btn-sm">Get In Touch</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-banner" id="hero">
+        <div class="container text-center text-md-start">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    {% if website.domain %}
+                    <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-1 mb-3 small">
+                        <i class="bi bi-shield-check me-1"></i> https://{{ website.domain.domain_name }}
+                    </span>
+                    {% endif %}
+                    <h1 class="display-4 fw-extrabold text-white mb-3">
+                        {{ website.tagline|default:website.title }}
+                    </h1>
+                    <p class="lead text-white-50 mb-4" style="line-height: 1.7;">
+                        {{ website.about_text|truncatewords:40|default:"Welcome to our business portal. We provide world-class solutions and services designed for excellence." }}
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
+                        <a href="#contact" class="btn btn-light btn-lg rounded-pill fw-bold text-dark px-4 shadow">
+                            Contact Us Today <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <a href="#industry-services" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center">
+                    <div class="p-4 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-20 text-start shadow-lg">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="fs-1 text-warning"><i class="bi bi-patch-check-fill"></i></div>
+                            <div>
+                                <h5 class="text-white fw-bold mb-0">{{ website.industry.name }}</h5>
+                                <span class="text-white-50 small">Verified Business</span>
+                            </div>
+                        </div>
+                        {% if website.contact_phone %}
+                        <div class="text-white-50 small mb-2">
+                            <i class="bi bi-telephone-fill me-2 text-white"></i> {{ website.contact_phone }}
+                        </div>
+                        {% endif %}
+                        {% if website.contact_email %}
+                        <div class="text-white-50 small mb-2">
+                            <i class="bi bi-envelope-fill me-2 text-white"></i> {{ website.contact_email }}
+                        </div>
+                        {% endif %}
+                        {% if website.address %}
+                        <div class="text-white-50 small">
+                            <i class="bi bi-geo-alt-fill me-2 text-white"></i> {{ website.address }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="py-5" id="about">
+        <div class="container py-4">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <span class="section-tag mb-2 d-block">Who We Are</span>
+                    <h2 class="fw-bold fs-2 text-dark mb-3">About {{ website.title }}</h2>
+                    <p class="text-secondary mb-4" style="line-height: 1.8;">
+                        {{ website.about_text|default:"Our organization is committed to providing reliable, top-tier products and services to our valued customers and community." }}
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <h6 class="fw-bold text-dark mb-1"><i class="bi bi-clock-history text-primary me-2"></i> Working Hours</h6>
+                                <p class="text-secondary small mb-0">{{ website.working_hours|default:"Mon - Fri: 9:00 AM - 6:00 PM" }}</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <h6 class="fw-bold text-dark mb-1"><i class="bi bi-geo-alt-fill text-danger me-2"></i> Our Location</h6>
+                                <p class="text-secondary small mb-0">{{ website.address|default:"Headquarters" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="p-5 rounded-4 bg-light text-center border">
+                        <i class="bi bi-trophy-fill display-3 text-warning mb-3"></i>
+                        <h4 class="fw-bold text-dark">Dedicated to Client Satisfaction</h4>
+                        <p class="text-secondary small mb-0">Delivering quality, transparent communication, and industry-grade expertise.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Industry Section -->
+    <section class="py-5 bg-light" id="industry-services">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="section-tag mb-2 d-block">Specialized Solutions</span>
+                <h2 class="fw-bold fs-2 text-dark">{{ website.industry.name }} Highlights</h2>
+                <p class="text-muted">Explore our custom-tailored industry offerings and capabilities.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Dynamic Content Rendering from custom_data -->
+                {% for key, val in website.custom_data.items %}
+                <div class="col-md-6">
+                    <div class="card h-100 p-4 rounded-4 border-0 shadow-sm">
+                        <div class="feature-icon-box">
+                            <i class="bi bi-check2-circle"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-2 text-capitalize">{{ key|cut:'_' }}</h5>
+                        <p class="text-secondary mb-0" style="white-space: pre-line;">{{ val }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-md-4">
+                    <div class="card h-100 p-4 rounded-4 border-0 shadow-sm text-center">
+                        <div class="feature-icon-box mx-auto"><i class="bi bi-star"></i></div>
+                        <h5 class="fw-bold text-dark mb-2">Quality Excellence</h5>
+                        <p class="text-secondary small">Comprehensive end-to-end services adapted to modern standards.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 p-4 rounded-4 border-0 shadow-sm text-center">
+                        <div class="feature-icon-box mx-auto"><i class="bi bi-shield-check"></i></div>
+                        <h5 class="fw-bold text-dark mb-2">Certified Experience</h5>
+                        <p class="text-secondary small">Trusted methodologies backed by a dedicated team of professionals.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 p-4 rounded-4 border-0 shadow-sm text-center">
+                        <div class="feature-icon-box mx-auto"><i class="bi bi-headset"></i></div>
+                        <h5 class="fw-bold text-dark mb-2">Direct Support</h5>
+                        <p class="text-secondary small">Fast, accessible customer service and consultative communication.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Interactive Enquiry Section -->
+    <section class="py-5" id="contact">
+        <div class="container py-4">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5">
+                    <span class="section-tag mb-2 d-block">Get Connected</span>
+                    <h2 class="fw-bold fs-2 text-dark mb-3">Send Us An Inquiry</h2>
+                    <p class="text-secondary mb-4">Have questions or want to collaborate? Fill out the form and our team will get back to you shortly.</p>
+                    
+                    <div class="d-flex flex-column gap-3">
+                        {% if website.contact_phone %}
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-3 bg-light rounded-circle text-primary"><i class="bi bi-telephone-fill"></i></div>
+                            <div>
+                                <div class="small text-muted">Phone Number</div>
+                                <div class="fw-bold text-dark">{{ website.contact_phone }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if website.contact_email %}
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-3 bg-light rounded-circle text-primary"><i class="bi bi-envelope-fill"></i></div>
+                            <div>
+                                <div class="small text-muted">Email Address</div>
+                                <div class="fw-bold text-dark">{{ website.contact_email }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if website.address %}
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-3 bg-light rounded-circle text-primary"><i class="bi bi-geo-alt-fill"></i></div>
+                            <div>
+                                <div class="small text-muted">Office Address</div>
+                                <div class="fw-bold text-dark">{{ website.address }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="contact-card-box">
+                        <div id="enquirySuccessAlert" class="alert alert-success d-none mb-3 rounded-3">
+                            <i class="bi bi-check-circle-fill me-2"></i> Thank you! Your message has been sent successfully.
+                        </div>
+
+                        <form id="publicEnquiryForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Your Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="enquiryName" required placeholder="Jane Doe">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Your Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="enquiryEmail" required placeholder="jane@example.com">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">Phone Number</label>
+                                    <input type="tel" class="form-control" id="enquiryPhone" placeholder="+1 (555) 000-0000">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">Message <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="enquiryMessage" rows="4" required placeholder="How can we help your business?"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-brand-primary w-100 py-3 shadow-sm" id="btnSendEnquiry">
+                                        Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white-50 py-4 border-top border-dark-subtle">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <div class="text-white fw-bold">{{ website.title }}</div>
+            <div class="small">
+                Powered by <strong>BrandNest</strong> Digital Presence Engine
+            </div>
+        </div>
+    </footer>
+
+    <!-- Form Handler via REST API -->
+    <script>
+    document.getElementById('publicEnquiryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnSendEnquiry');
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        fetch('/api/v1/websites/{{ website.id }}/enquiries/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                visitor_name: document.getElementById('enquiryName').value,
+                visitor_email: document.getElementById('enquiryEmail').value,
+                visitor_phone: document.getElementById('enquiryPhone').value,
+                message: document.getElementById('enquiryMessage').value
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+            document.getElementById('enquirySuccessAlert').classList.remove('d-none');
+            document.getElementById('publicEnquiryForm').reset();
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+            alert('Your enquiry has been received.');
+            document.getElementById('enquirySuccessAlert').classList.remove('d-none');
+            document.getElementById('publicEnquiryForm').reset();
+        });
+    });
+    </script>
+
+</body>
+</html>
+

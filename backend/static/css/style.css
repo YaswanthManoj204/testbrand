@@ -1,0 +1,226 @@
+/* BrandNest Global Styling */
+:root {
+    --bn-primary: #2563EB;
+    --bn-primary-dark: #1D4ED8;
+    --bn-dark: #0F172A;
+    --bn-surface: #FFFFFF;
+    --bn-border: #E2E8F0;
+    --bn-accent: #06B6D4;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1E293B;
+    background-color: #F8FAFC;
+}
+
+h1, h2, h3, h4, h5, h6, .fw-bold, .navbar-brand {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Hero Section */
+.hero-gradient {
+    background: radial-gradient(100% 100% at 50% 0%, #1E293B 0%, #0F172A 100%);
+    color: #F8FAFC;
+    padding: 5rem 0 4rem;
+}
+
+.hero-badge {
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #93C5FD;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Feature Selection Cards */
+.choice-card {
+    transition: all 0.25s ease-in-out;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background: #FFFFFF;
+}
+
+.choice-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    border-color: var(--bn-primary);
+}
+
+.choice-card .icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Step Progress Indicator */
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.step-node {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #94A3B8;
+}
+
+.step-node.active {
+    color: var(--bn-primary);
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E2E8F0;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+.step-node.active .step-circle {
+    background-color: var(--bn-primary);
+    color: #FFFFFF;
+}
+
+.step-line {
+    width: 48px;
+    height: 2px;
+    background-color: #E2E8F0;
+}
+
+/* Domain Gate Banner & Box */
+.domain-gate-card {
+    background: linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 100%);
+    border: 1px solid #BFDBFE;
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.dns-code-box {
+    background: #0F172A;
+    color: #E2E8F0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    word-break: break-all;
+}
+
+/* Smartphone Mockup Frame for Business Card */
+.phone-mockup-wrapper {
+    max-width: 420px;
+    margin: 0 auto;
+    background: #1E293B;
+    border-radius: 44px;
+    padding: 12px;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+    border: 4px solid #334155;
+    overflow: hidden;
+}
+
+.phone-screen {
+    background: #FFFFFF;
+    border-radius: 34px;
+    overflow: hidden;
+    height: 680px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transform: translateZ(0);
+}
+
+.phone-scroll-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.phone-scroll-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.phone-screen .sticky-actions {
+    position: fixed !important;
+    bottom: 22px !important;
+    left: 20px !important;
+    right: 20px !important;
+    width: calc(100% - 40px) !important;
+    transform: none !important;
+    z-index: 60 !important;
+    pointer-events: none !important;
+}
+
+.phone-scroll-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+
+.phone-notch {
+    width: 140px;
+    height: 20px;
+    background: #1E293B;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+/* Industry Grid Selection */
+.industry-card-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid #E2E8F0;
+}
+
+.industry-card-item:hover, .industry-card-item.selected {
+    border-color: var(--bn-primary);
+    background-color: #EFF6FF;
+}
+
+.industry-card-item.selected {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Live Viewport Switcher */
+.viewport-frame {
+    transition: width 0.3s ease;
+    margin: 0 auto;
+    background: #FFFFFF;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.viewport-desktop {
+    width: 100%;
+}
+
+.viewport-tablet {
+    width: 768px;
+}
+
+.viewport-mobile {
+    width: 414px;
+}
+

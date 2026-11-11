@@ -1,0 +1,3052 @@
+<!-- Digital Business Card - New Modern Light Preview & Standalone Template -->
+<style>
+:root {
+  --blue: {{ card.theme_color|default:"#087cff" }};
+  --card-primary: var(--blue);
+  --ink: #101114;
+  --muted: #777b84;
+  --surface: #ffffff;
+  --page: #f4f4f6;
+  --line: #e9e9ed;
+  --radius: 20px;
+  --card-font: '{{ card.layout_config.font|default:"DM Sans" }}';
+}
+
+.card-theme-wrapper {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 560px);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 0 24px 118px;
+  overflow: visible;
+  background: linear-gradient(180deg, #f2f2f4 0%, #fbfbfd 100%);
+  color: var(--ink);
+  font-family: var(--card-font), "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background .25s ease, color .25s ease;
+  user-select: none;
+}
+
+/* Dark Theme Support (Toggleable via bottom footer action) */
+.card-theme-wrapper.theme-dark {
+  --ink: #F8FAFC;
+  --muted: #94A3B8;
+  --surface: #151D2C;
+  --page: #0B0F19;
+  --line: #222E42;
+  background: linear-gradient(180deg, #0B0F19 0%, #111827 100%);
+}
+
+/* Builder Mode Drag Handles */
+.builder-block-handle {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: rgba(16, 17, 20, 0.6);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 3px 8px;
+  border-radius: 6px;
+  pointer-events: none;
+}
+.card-theme-wrapper.theme-dark .builder-block-handle {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.1);
+}
+.card-builder-mode .builder-block-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Hero Gradient Banner */
+.hero-gradient {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 auto;
+  height: 380px;
+  border-radius: 0 0 22px 22px;
+  background:
+    radial-gradient(ellipse at 78% 12%, rgba(255, 191, 204, .95), transparent 37%),
+    radial-gradient(ellipse at 52% 44%, rgba(90, 190, 255, .95), transparent 45%),
+    linear-gradient(125deg, #06315f 4%, #007e9b 43%, #267de5 73%, #d14a9d 100%);
+  background-size: cover;
+  background-position: {{ card.layout_config.banner_position|default:'50% 50%' }};
+  cursor: grab;
+  touch-action: none;
+  overflow: hidden;
+  transition: filter .2s;
+}
+
+.banner-zoom-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: {{ card.layout_config.banner_position|default:'50% 50%' }};
+  transform: translate({{ card.layout_config.banner_x|default:'0%' }}, {{ card.layout_config.banner_y|default:'0%' }}) scale({{ card.layout_config.banner_zoom|default:'1' }});
+  transform-origin: center center;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Touch & Drag Styling for Live Interactive Adjustments */
+.phone-viewport #avatarCircleWrapper,
+.phone-viewport #cardLogoBadge,
+.phone-viewport #sec-banner {
+  cursor: grab !important;
+  touch-action: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+.phone-viewport #avatarCircleWrapper:active,
+.phone-viewport #cardLogoBadge:active,
+.phone-viewport #sec-banner:active {
+  cursor: grabbing !important;
+}
+
+.banner-drag-hint {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.hero-gradient:hover .banner-drag-hint {
+  opacity: 1;
+}
+
+/* Content Area */
+.content {
+  position: relative;
+  z-index: 1;
+  padding-top: 290px;
+}
+
+/* Profile Card */
+.profile-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.28fr);
+  gap: 20px;
+  align-items: stretch;
+  min-height: 205px;
+  padding: 10px;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 12px 35px rgba(26, 31, 46, .08);
+  position: relative;
+  transition: background .25s ease, box-shadow .25s ease;
+}
+.card-theme-wrapper.theme-dark .profile-card {
+  background: rgba(21, 29, 44, .97);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .4);
+}
+
+.profile-photo-wrapper {
+  position: relative;
+  width: 100%;
+  height: 185px;
+  border-radius: 11px;
+  overflow: hidden;
+  background: #e7e8eb;
+  cursor: grab;
+  touch-action: none;
+}
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: {{ card.layout_config.avatar_position|default:'50% 50%' }};
+  transform: translate({{ card.layout_config.avatar_x|default:'0%' }}, {{ card.layout_config.avatar_y|default:'0%' }}) scale({{ card.layout_config.avatar_zoom|default:'1' }});
+  transform-origin: center center;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+.avatar-drag-hint {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.profile-photo-wrapper:hover .avatar-drag-hint {
+  opacity: 1;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 4px 10px 4px 0;
+}
+
+.profile-info h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -.4px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.designation, .designation-text {
+  margin: 0;
+  color: #555c68;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 400;
+}
+.card-theme-wrapper.theme-dark .designation,
+.card-theme-wrapper.theme-dark .designation-text {
+  color: #94A3B8;
+}
+
+.company-subtext {
+  margin: 1px 0 2px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -.2px;
+  display: block;
+}
+.card-theme-wrapper.theme-dark .company-subtext {
+  color: #F1F5F9;
+}
+
+.profile-divider {
+  height: 1px;
+  margin: 22px 0 12px;
+  background: var(--line);
+}
+
+.company-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blue);
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.logo-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(8, 124, 255, 0.1);
+  color: var(--blue);
+  font-size: 18px;
+  line-height: 1;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.logo-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: translate({{ card.layout_config.logo_x|default:'0%' }}, {{ card.layout_config.logo_y|default:'0%' }}) scale({{ card.layout_config.logo_zoom|default:'1' }});
+  transform-origin: center center;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Primary Actions */
+.primary-actions-group {
+  margin: 0 0 11px;
+}
+.primary-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+}
+
+.action-button, .nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.action-button:active, .nav-button:active, .icon-button:active {
+  transform: scale(.97);
+}
+
+.action-button svg, .nav-button svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.save-button {
+  color: var(--ink);
+  background: rgba(255, 255, 255, .96);
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .04);
+}
+.card-theme-wrapper.theme-dark .save-button {
+  background: #1E293B;
+  color: #fff;
+  border-color: #334155;
+}
+
+.share-button {
+  color: #fff;
+  background: var(--blue);
+  box-shadow: 0 6px 20px rgba(8, 124, 255, .28);
+}
+
+/* Calendly Booking Pill */
+.calendly-booking-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 13px 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #006BFF, #0052CC);
+  color: #FFFFFF !important;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0, 107, 255, 0.28);
+  transition: transform .18s ease;
+}
+.calendly-booking-pill:hover {
+  transform: translateY(-1px);
+  color: #FFFFFF !important;
+}
+
+/* Main Navigation */
+.main-nav-sticky-wrapper {
+  position: static;
+  z-index: 10;
+  margin: 0 0 11px;
+  padding: 0;
+  background: transparent;
+}
+.main-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+  padding: 6px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, .6);
+  box-shadow: 0 8px 25px rgba(20, 28, 45, .04);
+}
+.card-theme-wrapper.theme-dark .main-nav {
+  background: rgba(21, 29, 44, .82);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-button {
+  min-height: 44px;
+  color: var(--ink);
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 600;
+}
+.card-theme-wrapper.theme-dark .nav-button {
+  background: #1A2333;
+  color: #fff;
+}
+
+.nav-button.active {
+  color: #fff !important;
+  background: var(--blue) !important;
+  box-shadow: 0 4px 16px rgba(8, 124, 255, .3);
+}
+
+/* Section Card */
+.section-card {
+  margin: 0 0 11px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(20, 28, 45, .045);
+  position: relative;
+  transition: background .25s ease, box-shadow .25s ease;
+}
+.card-theme-wrapper.theme-dark .section-card {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+  border: 1px solid var(--line);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -.4px;
+  color: var(--ink);
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 11px;
+  color: var(--ink);
+  background: #f4f5f7;
+  cursor: pointer;
+  transition: transform .18s ease, background .18s ease;
+}
+.card-theme-wrapper.theme-dark .icon-button {
+  background: #1E293B;
+  color: #fff;
+}
+.icon-button:hover {
+  background: #eaf2ff;
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* About Card */
+.about-card p {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.card-theme-wrapper.theme-dark .about-card p {
+  color: #E2E8F0;
+}
+.about-text.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.btn-about-toggle {
+  background: none;
+  border: none;
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 0 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Capabilities Card & Carousel */
+.carousel-controls {
+  display: flex;
+  gap: 7px;
+}
+.carousel-viewport {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -4px;
+  padding: 0 4px 4px;
+}
+.carousel-viewport::-webkit-scrollbar {
+  display: none;
+}
+.capability-track {
+  display: flex;
+  gap: 16px;
+  transition: transform .35s ease;
+}
+.capability-item {
+  flex: 0 0 170px;
+  min-width: 0;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .2s ease;
+}
+.capability-item:hover {
+  transform: translateY(-2px);
+}
+.capability-image {
+  display: grid;
+  place-items: center;
+  aspect-ratio: .78;
+  overflow: hidden;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, .95);
+  font-size: 28px;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+}
+.capability-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gradient-one { background: linear-gradient(145deg, #f88fae 0%, #ffad76 55%, #ff405d 100%); }
+.gradient-two { background: linear-gradient(145deg, #f8a0b4 0%, #ff9a74 52%, #f54d61 100%); }
+.gradient-three { background: linear-gradient(145deg, #f5a2c1 0%, #ffb16f 55%, #fa4d5d 100%); }
+.gradient-four { background: linear-gradient(145deg, #8bc8ff 0%, #8876ed 55%, #ef7db2 100%); }
+
+.capability-item h3 {
+  margin: 12px 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.capability-item p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 18px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #cfe4ff;
+  cursor: pointer;
+  transition: all .2s;
+}
+.card-theme-wrapper.theme-dark .dot {
+  background: #334155;
+}
+.dot.active {
+  width: 22px;
+  border-radius: 999px;
+  background: var(--blue);
+}
+
+/* Our Brands */
+.section-kicker {
+  color: #999da5;
+  font-size: 12.5px;
+}
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.brand-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #ededf0;
+  border-radius: 15px;
+  color: var(--ink);
+  text-decoration: none;
+  background: #fff;
+  transition: transform .2s, border-color .2s;
+}
+.card-theme-wrapper.theme-dark .brand-tile {
+  background: #1A2333;
+  border-color: #273449;
+  color: #fff;
+}
+.brand-tile:hover {
+  transform: translateY(-2px);
+  border-color: #c8ddff;
+}
+.brand-art {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.28;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 26px;
+  font-weight: 700;
+  overflow: hidden;
+}
+.brand-art-one { background: linear-gradient(135deg, #1d9ed6, #755cf1); }
+.brand-art-two { background: linear-gradient(135deg, #ffb27d, #ed5a83); }
+.brand-art-three { background: linear-gradient(135deg, #55c8a3, #1788c9); }
+.brand-tile strong {
+  padding: 0 2px 2px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.tile-arrow {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  color: var(--muted);
+}
+
+/* Connect Grid */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.contact-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 108px;
+  padding: 10px 4px;
+  border: 1px solid #eceef2;
+  border-radius: 15px;
+  color: var(--ink);
+  background: #fafbfc;
+  font-size: 14.5px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: transform .18s ease, border-color .18s ease;
+}
+.card-theme-wrapper.theme-dark .contact-tile {
+  background: #1A2333;
+  border-color: #273449;
+  color: #fff;
+}
+.contact-tile:hover {
+  transform: translateY(-2px);
+  border-color: #c8ddff;
+}
+.contact-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #e5efff;
+  font-size: 24px;
+  font-weight: 600;
+}
+.card-theme-wrapper.theme-dark .contact-icon {
+  background: #1E293B;
+}
+.contact-icon.blue { color: var(--blue); }
+.contact-icon.green { color: #16c86a; }
+.contact-icon.red { color: #ef4e57; }
+
+/* Callback Form */
+.callback-card form {
+  display: flex;
+  flex-direction: column;
+}
+.callback-card label {
+  margin: 8px 0 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.callback-card label span {
+  color: #ef4d55;
+}
+.callback-card input, .callback-card textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e6e8ed;
+  border-radius: 13px;
+  outline: none;
+  color: var(--ink);
+  background: #f8f9fb;
+  font-size: 15.5px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+  font-family: inherit;
+}
+.card-theme-wrapper.theme-dark .callback-card input,
+.card-theme-wrapper.theme-dark .callback-card textarea {
+  background: #1A2333;
+  border-color: #2D3A4F;
+  color: #fff;
+}
+.callback-card input {
+  min-height: 50px;
+  margin-bottom: 8px;
+}
+.callback-card textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+.callback-card input:focus, .callback-card textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(8, 124, 255, .12);
+}
+.privacy-note {
+  margin: 14px 0;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.submit-button {
+  min-height: 54px;
+  border: 0;
+  border-radius: 14px;
+  color: #fff;
+  background: var(--blue);
+  font-size: 16.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .18s, transform .18s;
+}
+.submit-button:hover {
+  opacity: .95;
+}
+.submit-button:active {
+  transform: scale(.98);
+}
+.form-feedback {
+  min-height: 18px;
+  margin: 9px 0 0;
+  color: #16884b;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Footer Copyright & Utility */
+.card-footer-copyright {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: center;
+  padding: 18px 10px 10px;
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.footer-utility-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.footer-utility-btn {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.card-theme-wrapper.theme-dark .footer-utility-btn {
+  background: #1A2333;
+  color: #fff;
+  border-color: #2D3A4F;
+}
+
+/* Persistent Sticky Actions (Call Us & WhatsApp) */
+.sticky-actions {
+  position: fixed;
+  z-index: 80;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(calc(100% - 42px), 508px);
+  pointer-events: none;
+}
+
+.call-us, .whatsapp-float {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  color: #fff !important;
+  text-decoration: none;
+  pointer-events: auto;
+  box-shadow: 0 8px 22px rgba(8, 124, 255, .25);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.call-us:hover, .whatsapp-float:hover {
+  transform: translateY(-1px);
+}
+.call-us {
+  flex: 1;
+  gap: 10px;
+  border-radius: 40px;
+  background: var(--blue);
+  font-size: 18px;
+  font-weight: 600;
+}
+.call-us span {
+  font-size: 20px;
+}
+.whatsapp-float {
+  width: 58px;
+  border-radius: 50%;
+  background: #19cf69;
+  box-shadow: 0 8px 22px rgba(25, 207, 105, .25);
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+/* Toast */
+.toast-notice {
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  bottom: 86px;
+  max-width: calc(100% - 40px);
+  padding: 10px 18px;
+  border-radius: 12px;
+  color: #fff;
+  background: #101114;
+  font-size: 13.5px;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+.toast-notice.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Half-Page Bottom Sheet Modal */
+.card-bottom-sheet-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 9998;
+}
+.card-bottom-sheet {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 560px);
+  max-height: 85vh;
+  background: var(--surface);
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35);
+  z-index: 9999;
+  padding: 24px 22px 34px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: slideSheetUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideSheetUp {
+  from { transform: translate(-50%, 100%); }
+  to { transform: translate(-50%, 0); }
+}
+.sheet-drag-handle {
+  width: 44px;
+  height: 5px;
+  background: var(--line);
+  border-radius: 99px;
+  margin: 0 auto 16px;
+  cursor: pointer;
+}
+.sheet-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f2f5;
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+.sheet-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  background: #e2e8f0;
+}
+.sheet-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.sheet-desc {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.sheet-whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px;
+  border-radius: 14px;
+  background: #25D366;
+  color: #FFFFFF !important;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Visibility Toggles based on template layout */
+.card-theme-wrapper.hide-avatar .profile-photo-wrapper { display: none !important; }
+.card-theme-wrapper.hide-logo .company-logo { display: none !important; }
+.card-theme-wrapper.hide-banner .hero-gradient { display: none !important; }
+.card-theme-wrapper.hide-banner .content { padding-top: 20px !important; }
+.card-theme-wrapper.hide-avatar .profile-card { grid-template-columns: 1fr !important; display: block !important; }
+
+/* Add Logo Prompt styling (When no logo is uploaded) */
+.add-logo-prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--blue);
+  opacity: 0.9;
+  letter-spacing: .01em;
+}
+.company-logo:hover .add-logo-prompt {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   4 DISTINCT PROFILE & LOGO TEMPLATE LAYOUTS (Matching User Reference)
+   ========================================================================== */
+
+/* 1. Cover Hero (iPhone 18 Pro - 2) */
+.card-theme-wrapper.layout-cover-hero .hero-gradient {
+  height: 420px !important;
+}
+.card-theme-wrapper.layout-cover-hero .content {
+  padding-top: 350px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-cover-hero .hero-gradient {
+  height: 360px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-cover-hero .content {
+  padding-top: 300px !important;
+}
+.card-theme-wrapper.layout-cover-hero .profile-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-bottom: 11px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.card-theme-wrapper.layout-cover-hero .dual-header-row {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  padding: 0 8px 12px !important;
+  width: 100% !important;
+}
+.card-theme-wrapper.layout-cover-hero .profile-photo-wrapper {
+  width: 108px !important;
+  height: 108px !important;
+  border-radius: 50% !important;
+  border: 4px solid #ffffff !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14) !important;
+  background: #ffffff !important;
+  flex: 0 0 108px !important;
+  margin: 0 !important;
+}
+.card-theme-wrapper.theme-dark.layout-cover-hero .profile-photo-wrapper {
+  border-color: #151D2C !important;
+}
+.card-theme-wrapper.layout-cover-hero .company-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: var(--blue) !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  padding-bottom: 6px !important;
+  padding-right: 6px !important;
+  max-width: 170px !important;
+}
+.card-theme-wrapper.layout-cover-hero .company-logo .logo-mark {
+  width: auto !important;
+  max-width: 140px !important;
+  height: auto !important;
+  max-height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+}
+.card-theme-wrapper.layout-cover-hero .company-logo .logo-mark img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 130px !important;
+  max-height: 38px !important;
+  object-fit: contain !important;
+}
+.card-theme-wrapper.layout-cover-hero .company-logo #pCompanyNameText {
+  color: var(--blue) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+.card-theme-wrapper.layout-cover-hero .profile-info {
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 20px 22px !important;
+  box-shadow: 0 8px 28px rgba(20, 28, 45, 0.055) !important;
+  width: 100% !important;
+}
+.card-theme-wrapper.theme-dark.layout-cover-hero .profile-info {
+  background: #151D2C !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
+}
+.card-theme-wrapper.layout-cover-hero .profile-info h1 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  margin: 0 0 4px !important;
+  color: var(--ink) !important;
+  text-align: left !important;
+  letter-spacing: -.4px !important;
+}
+.card-theme-wrapper.layout-cover-hero .designation {
+  font-size: 14px !important;
+  color: #555c68 !important;
+  margin: 0 0 2px !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+}
+.card-theme-wrapper.layout-cover-hero .company-subtext {
+  font-size: 15.5px !important;
+  color: var(--ink) !important;
+  margin: 0 0 2px !important;
+  font-weight: 600 !important;
+  display: block !important;
+}
+.card-theme-wrapper.layout-cover-hero .profile-divider {
+  display: none !important;
+}
+
+/* 2. Dual Executive (iPhone 18 Pro - 3) */
+.card-theme-wrapper.layout-dual-executive .hero-gradient {
+  height: 320px !important;
+}
+.card-theme-wrapper.layout-dual-executive .content {
+  padding-top: 250px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-dual-executive .hero-gradient {
+  height: 290px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-dual-executive .content {
+  padding-top: 230px !important;
+}
+.card-theme-wrapper.layout-dual-executive .profile-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin-bottom: 11px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.card-theme-wrapper.layout-dual-executive .dual-header-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 8px 12px !important;
+  width: 100% !important;
+}
+.card-theme-wrapper.layout-dual-executive .profile-photo-wrapper {
+  width: 100px !important;
+  height: 100px !important;
+  border-radius: 50% !important;
+  border: 4px solid #ffffff !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14) !important;
+  background: #ffffff !important;
+  flex: 0 0 100px !important;
+  margin: 0 !important;
+}
+.card-theme-wrapper.theme-dark.layout-dual-executive .profile-photo-wrapper {
+  border-color: #151D2C !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  color: inherit !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  min-height: auto !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  max-width: 180px !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-logo .logo-mark {
+  width: auto !important;
+  max-width: 180px !important;
+  height: auto !important;
+  max-height: 56px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-logo.has-image .logo-mark img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 180px !important;
+  max-height: 56px !important;
+  object-fit: contain !important;
+  border-radius: 10px !important;
+  display: block !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-logo:not(.has-image) .logo-mark img,
+.company-logo:not(.has-image) #pLogoImg,
+#pLogoImg:not([src]),
+#pLogoImg[src=""],
+#pLogoImg[style*="display: none"],
+#pLogoImg[style*="display:none"] {
+  display: none !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-logo:not(.has-image) #pLogoPlaceholder {
+  background: var(--blue) !important;
+  color: #ffffff !important;
+  padding: 8px 14px !important;
+  border-radius: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 6px 20px rgba(8, 124, 255, 0.3) !important;
+}
+.company-logo.has-image #pLogoPlaceholder,
+#cardLogoBadge.has-image #pLogoPlaceholder,
+.company-logo.has-image i.bi-buildings,
+#pLogoPlaceholder[style*="display: none"],
+#pLogoPlaceholder[style*="display:none"],
+.card-theme-wrapper.layout-dual-executive .company-logo.has-image #pLogoPlaceholder,
+.card-theme-wrapper.layout-dual-executive .company-logo #pLogoPlaceholder.is-hidden {
+  display: none !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-logo #pCompanyNameText {
+  color: #ffffff !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-logo .add-logo-prompt {
+  color: #ffffff !important;
+}
+.card-theme-wrapper.layout-dual-executive .profile-info {
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 20px 22px !important;
+  box-shadow: 0 8px 28px rgba(20, 28, 45, 0.055) !important;
+  width: 100% !important;
+}
+.card-theme-wrapper.theme-dark.layout-dual-executive .profile-info {
+  background: #151D2C !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
+}
+.card-theme-wrapper.layout-dual-executive .profile-info h1 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  margin: 0 0 4px !important;
+  color: var(--ink) !important;
+  text-align: left !important;
+  letter-spacing: -.4px !important;
+}
+.card-theme-wrapper.layout-dual-executive .designation {
+  font-size: 14px !important;
+  color: #555c68 !important;
+  margin: 0 0 2px !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+}
+.card-theme-wrapper.layout-dual-executive .company-subtext {
+  font-size: 15.5px !important;
+  color: var(--ink) !important;
+  margin: 0 0 2px !important;
+  font-weight: 600 !important;
+  display: block !important;
+}
+.card-theme-wrapper.layout-dual-executive .profile-divider {
+  display: none !important;
+}
+
+/* 3. Banner & Portrait (iPhone 18 Pro - 4) */
+.card-theme-wrapper.layout-banner-portrait .hero-gradient {
+  height: 420px !important;
+}
+.card-theme-wrapper.layout-banner-portrait .content {
+  padding-top: 330px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-banner-portrait .hero-gradient {
+  height: 350px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-banner-portrait .content {
+  padding-top: 275px !important;
+}
+.card-theme-wrapper.layout-banner-portrait .profile-card {
+  background: #ffffff !important;
+  border-radius: 18px !important;
+  padding: 12px 14px 14px !important;
+  box-shadow: 0 10px 32px rgba(20, 28, 45, 0.08) !important;
+  display: grid !important;
+  grid-template-columns: 112px 1fr !important;
+  grid-template-rows: max-content max-content !important;
+  gap: 0 14px !important;
+  align-items: start !important;
+  margin-bottom: 11px !important;
+}
+.card-theme-wrapper.theme-dark.layout-banner-portrait .profile-card {
+  background: #151D2C !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4) !important;
+}
+.card-theme-wrapper.layout-banner-portrait .dual-header-row {
+  display: contents !important;
+}
+.card-theme-wrapper.layout-banner-portrait .profile-photo-wrapper {
+  grid-column: 1 !important;
+  grid-row: 1 / span 2 !important;
+  width: 112px !important;
+  height: 116px !important;
+  border-radius: 10px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+}
+.card-theme-wrapper.layout-banner-portrait .profile-info {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.card-theme-wrapper.layout-banner-portrait .profile-info h1 {
+  font-size: 18.5px !important;
+  font-weight: 700 !important;
+  margin: 0 0 2px !important;
+  color: var(--ink) !important;
+  text-align: left !important;
+  letter-spacing: -.4px !important;
+  line-height: 1.2 !important;
+}
+.card-theme-wrapper.layout-banner-portrait .designation {
+  font-size: 13.5px !important;
+  color: #555c68 !important;
+  margin: 0 0 1px !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+  line-height: 1.25 !important;
+}
+.card-theme-wrapper.layout-banner-portrait .company-subtext {
+  font-size: 14.5px !important;
+  color: var(--ink) !important;
+  margin: 0 0 1px !important;
+  font-weight: 600 !important;
+  display: block !important;
+  line-height: 1.25 !important;
+}
+.card-theme-wrapper.layout-banner-portrait .profile-divider {
+  display: block !important;
+  height: 1px !important;
+  background: var(--line) !important;
+  margin: 4px 0 2px !important;
+  width: 100% !important;
+}
+.card-theme-wrapper.layout-banner-portrait .company-logo {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  align-self: start !important;
+  margin-top: 0 !important;
+  gap: 7px !important;
+  color: var(--blue) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  max-width: 100% !important;
+}
+.card-theme-wrapper.layout-banner-portrait .company-logo .logo-mark {
+  width: auto !important;
+  max-width: 130px !important;
+  height: auto !important;
+  max-height: 34px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  background: transparent !important;
+}
+.card-theme-wrapper.layout-banner-portrait .company-logo .logo-mark img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 120px !important;
+  max-height: 32px !important;
+  object-fit: contain !important;
+}
+.card-theme-wrapper.layout-banner-portrait .company-logo #pCompanyNameText {
+  color: var(--blue) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+
+/* 4. Classic Centered (layout-classic - Symmetrical Centered) */
+.card-theme-wrapper.layout-classic .hero-gradient {
+  height: 330px !important;
+}
+.card-theme-wrapper.layout-classic .content {
+  padding-top: 260px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-classic .hero-gradient {
+  height: 290px !important;
+}
+.phone-viewport .card-theme-wrapper.layout-classic .content {
+  padding-top: 235px !important;
+}
+.card-theme-wrapper.layout-classic .profile-card {
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 0 20px 22px !important;
+  box-shadow: 0 10px 32px rgba(20, 28, 45, 0.08) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin-bottom: 11px !important;
+}
+.card-theme-wrapper.theme-dark.layout-classic .profile-card {
+  background: #151D2C !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4) !important;
+}
+.card-theme-wrapper.layout-classic .dual-header-row {
+  display: contents !important;
+}
+.card-theme-wrapper.layout-classic .profile-photo-wrapper {
+  order: 1 !important;
+  width: 105px !important;
+  height: 105px !important;
+  border-radius: 50% !important;
+  border: 4px solid #ffffff !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14) !important;
+  margin-top: -52px !important;
+  margin-bottom: 12px !important;
+  background: #ffffff !important;
+  flex: 0 0 105px !important;
+}
+.card-theme-wrapper.theme-dark.layout-classic .profile-photo-wrapper {
+  border-color: #151D2C !important;
+}
+.card-theme-wrapper.layout-classic .profile-info {
+  order: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+.card-theme-wrapper.layout-classic .profile-info h1 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  margin: 0 0 4px !important;
+  color: var(--ink) !important;
+  text-align: center !important;
+  letter-spacing: -.4px !important;
+}
+.card-theme-wrapper.layout-classic .designation {
+  font-size: 14px !important;
+  color: #555c68 !important;
+  margin: 0 0 2px !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+}
+.card-theme-wrapper.layout-classic .company-subtext {
+  font-size: 15.5px !important;
+  color: var(--ink) !important;
+  margin: 0 0 2px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  display: block !important;
+}
+.card-theme-wrapper.layout-classic .profile-divider {
+  display: block !important;
+  width: 44px !important;
+  height: 1px !important;
+  background: var(--line) !important;
+  margin: 10px auto 4px !important;
+}
+.card-theme-wrapper.layout-classic .company-logo {
+  order: 3 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  padding: 6px 16px !important;
+  border-radius: 999px !important;
+  background: rgba(8, 124, 255, 0.08) !important;
+  border: 1px solid rgba(8, 124, 255, 0.2) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: var(--blue) !important;
+  margin-top: 8px !important;
+  max-width: 200px !important;
+}
+.card-theme-wrapper.layout-classic .company-logo .logo-mark {
+  width: auto !important;
+  max-width: 150px !important;
+  height: auto !important;
+  max-height: 36px !important;
+}
+.card-theme-wrapper.layout-classic .company-logo .logo-mark img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 140px !important;
+  max-height: 34px !important;
+  object-fit: contain !important;
+}
+
+/* ==========================================================================
+   PAYMENTS & MORE SECTIONS CAROUSEL STYLES
+   ========================================================================== */
+.payments-card, .more-card {
+  margin-bottom: 11px !important;
+}
+.payments-carousel-track,
+.more-carousel-track {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px !important;
+  flex-wrap: nowrap !important;
+  width: max-content !important;
+  min-width: 100% !important;
+  transition: transform .35s ease;
+}
+.payments-carousel-track .payment-tile {
+  flex: 0 0 155px !important;
+  min-width: 155px !important;
+  max-width: 155px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all .18s ease !important;
+}
+.payments-carousel-track .payment-tile:hover {
+  background: #ffffff !important;
+  border-color: var(--blue) !important;
+  box-shadow: 0 6px 16px rgba(8, 124, 255, 0.12) !important;
+  transform: translateY(-2px) !important;
+}
+.card-theme-wrapper.theme-dark .payments-carousel-track .payment-tile {
+  background: rgba(26, 35, 51, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+.card-theme-wrapper.theme-dark .payments-carousel-track .payment-tile:hover {
+  background: #1E293B !important;
+  border-color: var(--blue) !important;
+}
+.payment-tile-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+}
+.payment-tile-icon {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+}
+.payment-tile-body {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+.payment-name {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.card-theme-wrapper.theme-dark .payment-name {
+  color: #F8FAFC !important;
+}
+.payment-sub-hint {
+  font-size: 11px !important;
+  color: var(--muted) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin-top: 2px !important;
+  display: block !important;
+}
+.btn-payment-action {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--blue) !important;
+  background: rgba(8, 124, 255, 0.08) !important;
+  border: 1px solid rgba(8, 124, 255, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 3px 8px !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: all .15s ease !important;
+}
+.payment-tile:hover .btn-payment-action {
+  background: var(--blue) !important;
+  color: #ffffff !important;
+}
+
+/* More Section Carousel Styles */
+.more-carousel-track .more-item-tile {
+  flex: 0 0 250px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  transition: all .18s ease !important;
+  cursor: pointer !important;
+}
+.more-carousel-track .more-item-tile:hover {
+  background: #ffffff !important;
+  border-color: var(--blue) !important;
+  box-shadow: 0 6px 16px rgba(8, 124, 255, 0.12) !important;
+  transform: translateY(-2px) !important;
+}
+.card-theme-wrapper.theme-dark .more-carousel-track .more-item-tile {
+  background: rgba(26, 35, 51, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+.card-theme-wrapper.theme-dark .more-carousel-track .more-item-tile:hover {
+  background: #1E293B !important;
+  border-color: var(--blue) !important;
+}
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all .16s ease;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: 100%;
+}
+.more-item-tile:hover {
+  background: #ffffff;
+  border-color: var(--blue);
+  box-shadow: 0 4px 14px rgba(8, 124, 255, 0.1);
+  transform: translateY(-1px);
+}
+.card-theme-wrapper.theme-dark .more-item-tile {
+  background: rgba(26, 35, 51, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.card-theme-wrapper.theme-dark .more-item-tile:hover {
+  background: #1E293B;
+  border-color: var(--blue);
+}
+.more-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.pdf-badge-icon {
+  background: rgba(239, 68, 68, 0.12);
+  color: #EF4444;
+}
+.gdrive-badge-icon {
+  background: rgba(33, 150, 243, 0.12);
+}
+.more-item-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  padding-right: 8px;
+}
+.more-item-title {
+  font-size: 14px;
+  font-weight: 700 !important;
+  color: var(--ink);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  display: block;
+}
+.card-theme-wrapper.theme-dark .more-item-title {
+  color: #F8FAFC;
+}
+.more-item-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+.more-action-btn {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff !important;
+  background: var(--blue);
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(8, 124, 255, 0.28);
+  transition: all .15s ease;
+  cursor: pointer;
+}
+.more-action-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 16px rgba(8, 124, 255, 0.38);
+  transform: translateY(-1px);
+}
+.more-action-btn:active {
+  transform: scale(0.96);
+}
+
+/* Toast Notification for UPI Copy */
+.payment-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1E293B;
+  color: #FFFFFF;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 9999;
+}
+.payment-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   DEFINITIVE HIGH-SPECIFICITY ASSET VISIBILITY OVERRIDES
+   ========================================================================== */
+#cardThemeWrapper.hide-logo #cardLogoBadge,
+.card-theme-wrapper.hide-logo .company-logo,
+.card-theme-wrapper.hide-logo #cardLogoBadge {
+  display: none !important;
+}
+#cardThemeWrapper.hide-avatar #avatarCircleWrapper,
+.card-theme-wrapper.hide-avatar .profile-photo-wrapper {
+  display: none !important;
+}
+#cardThemeWrapper.hide-banner #sec-banner,
+.card-theme-wrapper.hide-banner .hero-gradient {
+  display: none !important;
+}
+.card-theme-wrapper.hide-banner .content {
+  padding-top: 20px !important;
+}
+
+/* Responsive Adjustments inside Phone Preview Frame */
+.phone-viewport .card-theme-wrapper {
+  padding: 0 16px 105px;
+}
+.phone-viewport .profile-card {
+  gap: 11px;
+}
+</style>
+
+<div class="card-theme-wrapper {{ card.layout_config.layout_style|default:'layout-cover-hero' }}{% if card.layout_config.show_profile_photo is False %} hide-avatar{% endif %}{% if card.layout_config.show_company_logo is False %} hide-logo{% endif %}{% if card.layout_config.show_banner is False %} hide-banner{% endif %}"
+     id="cardThemeWrapper"
+     style="--blue: {{ card.theme_color|default:'#087cff' }}; --card-primary: {{ card.theme_color|default:'#087cff' }}; --card-font: '{{ card.layout_config.font|default:'DM Sans' }}'; font-family: var(--card-font), 'DM Sans', sans-serif;">
+
+  <!-- 1. Hero Gradient / Banner Cover Image -->
+  <div class="hero-gradient card-banner" id="sec-banner" title="Banner Cover – Drag to pan · Pinch or scroll to zoom"
+       style="background-position: {{ card.layout_config.banner_position|default:'50% 50%' }};">
+    <div class="banner-zoom-layer" id="pBannerLayer"
+         style="{% if card and card.banner_image %}background-image: url('{{ card.banner_image.url }}');{% endif %} background-position: {{ card.layout_config.banner_position|default:'50% 50%' }}; transform: translate({{ card.layout_config.banner_x|default:'0%' }}, {{ card.layout_config.banner_y|default:'0%' }}) scale({{ card.layout_config.banner_zoom|default:'1' }});"></div>
+    <span class="banner-drag-hint"><i class="bi bi-arrows-move"></i> Drag to pan · Pinch to zoom</span>
+  </div>
+
+  <div class="content">
+
+    <!-- 2. Profile Card -->
+    <section class="profile-card draggable-card-item" id="sec-identity" aria-label="Profile">
+      <div class="dual-header-row" id="pDualHeaderRow">
+        <div class="profile-photo-wrapper" id="avatarCircleWrapper" title="Profile Photo – Drag to pan · Pinch or scroll to zoom">
+          <img class="profile-photo" id="pAvatarImg"
+               src="{% if card and card.profile_photo %}{{ card.profile_photo.url }}{% elif card and card.profile_image %}{{ card.profile_image.url }}{% else %}https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=85{% endif %}"
+               alt="{{ card.owner_name|default:'Profile' }}"
+               style="object-position: {{ card.layout_config.avatar_position|default:'50% 50%' }}; transform: translate({{ card.layout_config.avatar_x|default:'0%' }}, {{ card.layout_config.avatar_y|default:'0%' }}) scale({{ card.layout_config.avatar_zoom|default:'1' }});" />
+          <span class="avatar-drag-hint"><i class="bi bi-arrows-move"></i> Drag · Pinch</span>
+        </div>
+
+        <a class="company-logo{% if card and card.logo or card and card.logo_image %} has-image{% endif %}" id="cardLogoBadge" href="{% if card.existing_website %}{{ card.existing_website }}{% else %}#{% endif %}" onclick="event.preventDefault();" target="_blank" aria-label="Company website" title="Company Logo – Drag to pan · Pinch or scroll to zoom">
+          <span class="logo-mark" id="pLogoMark">
+            {% if card and card.logo %}
+              <img src="{{ card.logo.url }}" id="pLogoImg" alt="" style="object-position:{{ card.layout_config.logo_position|default:'50% 50%' }}; transform: translate({{ card.layout_config.logo_x|default:'0%' }}, {{ card.layout_config.logo_y|default:'0%' }}) scale({{ card.layout_config.logo_zoom|default:'1' }});" onerror="this.style.display='none';">
+            {% elif card and card.logo_image %}
+              <img src="{{ card.logo_image.url }}" id="pLogoImg" alt="" style="object-position:{{ card.layout_config.logo_position|default:'50% 50%' }}; transform: translate({{ card.layout_config.logo_x|default:'0%' }}, {{ card.layout_config.logo_y|default:'0%' }}) scale({{ card.layout_config.logo_zoom|default:'1' }});" onerror="this.style.display='none';">
+            {% else %}
+              <img id="pLogoImg" alt="" style="display:none;" onerror="this.style.display='none';">
+              <span id="pLogoPlaceholder"><i class="bi bi-buildings"></i></span>
+            {% endif %}
+          </span>
+          <span id="pLogoBadgeLabel" style="display:none;"></span>
+        </a>
+      </div>
+
+      <div class="profile-info">
+        <h1 id="pBusinessName">{{ card.owner_name|default:"John Doe" }}</h1>
+        <div class="profile-identity-stack" id="pIdentityStack">
+          <div class="identity-line identity-line-company" id="pLineCompanyWrap">
+            <span class="company-subtext" id="pLineCompanyText">{% if card and card.business_name %}{{ card.business_name }}{% else %}Company Name{% endif %}</span>
+          </div>
+          <div class="identity-line identity-line-role" id="pLineRoleWrap">
+            <span class="designation-text" id="pLineRoleText">{% if card and card.layout_config.owner_role %}{{ card.layout_config.owner_role }}{% else %}{{ card.layout_config.role_title|default:"Role / Profession" }}{% endif %}</span>
+          </div>
+        </div>
+        <div class="profile-divider"></div>
+      </div>
+    </section>
+
+    <!-- 3. Primary Actions (Save Contact, Share Contact, Calendly) -->
+    <div class="primary-actions-group">
+      <div class="primary-actions">
+        <button class="action-button save-button" id="saveContact" type="button" onclick="downloadVCard();" {% if card.layout_config.settings and card.layout_config.settings.show_save_contact == False %}style="display:none;"{% endif %}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3"/></svg>
+          <span id="btnSaveContactText">Save contact</span>
+        </button>
+        <button class="action-button share-button" id="shareContact" type="button" onclick="handleSnippetShare();">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"/></svg>
+          <span>Share contact</span>
+        </button>
+      </div>
+
+      <!-- Calendly Appointment Booking (if enabled in settings) -->
+      <a href="{% if card.layout_config.settings and card.layout_config.settings.calendly_url %}{{ card.layout_config.settings.calendly_url }}{% else %}#{% endif %}" target="_blank" class="calendly-booking-pill" id="btnCalendlyBookPreview" style="display:{% if card.layout_config.settings and card.layout_config.settings.calendly_enabled %}flex{% else %}none{% endif %};">
+        <i class="bi bi-calendar2-check-fill"></i>
+        <span>Book an Appointment</span>
+      </a>
+    </div>
+
+    <!-- 4. Main Navigation (Sticky Tabs) -->
+    <div class="main-nav-sticky-wrapper" id="cardNavTabsStickyWrapper">
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-button active" id="tabHomeBtn" data-target="home" type="button" onclick="switchCardTab('home');">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+          <span>Home</span>
+        </button>
+        <a class="nav-button youtube-nav" id="tabYoutubeBtn" href="{% if card.social_links.youtube %}{{ card.social_links.youtube }}{% else %}https://youtube.com/{% endif %}" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg>
+          <span>YouTube</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- 5. Reorderable Content Sections (Home Tab) -->
+    <div id="tabContentHome">
+
+      <!-- Section: About -->
+      <section class="section-card about-card draggable-card-item" id="block-about" data-section="about">
+        <span class="builder-block-handle"><i class="bi bi-grip-vertical"></i> Drag</span>
+        <div class="section-heading">
+          <h2>About</h2>
+        </div>
+        <h4 class="about-headline" id="pAboutHeading" style="font-size:14px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.02em;margin:0 0 8px 0;display:{% if card and card.layout_config.about_heading %}block{% else %}none{% endif %};">
+          {{ card.layout_config.about_heading|default:"" }}
+        </h4>
+        <div class="about-text-container" id="aboutTextContainer">
+          <p id="aboutText" class="about-text">
+            {{ card.bio|default:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley created it." }}
+          </p>
+          <button type="button" class="btn-about-toggle" id="btnAboutToggle" onclick="toggleAboutExpand();" style="display:none;">
+            Show more <i class="bi bi-chevron-down"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- Section: Capabilities -->
+      <section class="section-card capabilities-card draggable-card-item" id="block-capabilities" data-section="capabilities">
+        <span class="builder-block-handle"><i class="bi bi-grip-vertical"></i> Drag</span>
+        <div class="section-heading">
+          <h2>Capabilities</h2>
+          <div class="carousel-controls">
+            <button class="icon-button" id="capPrev" type="button" aria-label="Previous capabilities" onclick="scrollCap('prev')"><svg viewBox="0 0 24 24"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+            <button class="icon-button" id="capNext" type="button" aria-label="Next capabilities" onclick="scrollCap('next')"><svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+          </div>
+        </div>
+        <div class="carousel-viewport" id="capViewport">
+          <div class="capability-track" id="capabilitiesCarousel">
+            {% if card.layout_config.capabilities_items %}
+              {% for item in card.layout_config.capabilities_items %}
+                <article class="capability-item" onclick="openDetailModal(this)"
+                         data-title="{{ item.title }}"
+                         data-image="{{ item.image|default:'' }}"
+                         data-desc="{{ item.description|default:'Get tailored solutions designed to scale your business operations.' }}">
+                  <div class="capability-image gradient-{% cycle 'one' 'two' 'three' 'four' %}">
+                    {% if item.image %}
+                      <img src="{{ item.image }}" alt="{{ item.title }}">
+                    {% else %}
+                      <span>0{{ forloop.counter }}</span>
+                    {% endif %}
+                  </div>
+                  <h3>{{ item.title }}</h3>
+                  <p>{{ item.description|default:"Creative solutions, strategy and thoughtful execution."|truncatewords:8 }}</p>
+                </article>
+              {% endfor %}
+            {% else %}
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Strategy & Design" data-desc="Creative solutions, strategy and thoughtful execution."><div class="capability-image gradient-one"><span>01</span></div><h3>Capabilities</h3><p>Creative solutions, strategy and thoughtful execution.</p></article>
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Digital Product" data-desc="Digital experiences built around your business goals."><div class="capability-image gradient-two"><span>02</span></div><h3>Capabilities</h3><p>Digital experiences built around your business goals.</p></article>
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Growth Scale" data-desc="Reliable services designed to help you grow."><div class="capability-image gradient-three"><span>03</span></div><h3>Capabilities</h3><p>Reliable services designed to help you grow.</p></article>
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Full Execution" data-desc="From concept to delivery, we make it happen."><div class="capability-image gradient-four"><span>04</span></div><h3>Capabilities</h3><p>From concept to delivery, we make it happen.</p></article>
+            {% endif %}
+          </div>
+        </div>
+        <div class="carousel-dots" id="capDots" aria-label="Carousel pages">
+          <button class="dot active" type="button" aria-label="Show capability 1" onclick="goToCapIndex(0)"></button>
+          <button class="dot" type="button" aria-label="Show capability 2" onclick="goToCapIndex(1)"></button>
+          <button class="dot" type="button" aria-label="Show capability 3" onclick="goToCapIndex(2)"></button>
+          <button class="dot" type="button" aria-label="Show capability 4" onclick="goToCapIndex(3)"></button>
+        </div>
+      </section>
+
+      <!-- Section: Our Brands -->
+      <section class="section-card brands-card draggable-card-item" id="block-brands" data-section="brands">
+        <span class="builder-block-handle"><i class="bi bi-grip-vertical"></i> Drag</span>
+        <div class="section-heading">
+          <h2>Our Brands</h2>
+          <div class="carousel-controls">
+            <button class="icon-button" id="brandPrev" type="button" aria-label="Previous brands" onclick="scrollBrands('prev')"><svg viewBox="0 0 24 24"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+            <button class="icon-button" id="brandNext" type="button" aria-label="Next brands" onclick="scrollBrands('next')"><svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+          </div>
+        </div>
+        <div class="carousel-viewport" id="brandsViewport">
+          <div class="capability-track" id="brandsCarousel">
+            {% if card.layout_config.brands_items %}
+              {% for b in card.layout_config.brands_items %}
+                <article class="capability-item" onclick="openDetailModal(this)"
+                         data-title="{{ b.title|default:b.name }}"
+                         data-image="{{ b.image|default:b.logo|default:'' }}"
+                         data-desc="{{ b.description|default:b.desc|default:'A trusted venture and partner brand.' }}">
+                  <div class="capability-image gradient-{% cycle 'one' 'two' 'three' 'four' %}">
+                    {% if b.image or b.logo %}
+                      <img src="{{ b.image|default:b.logo }}" alt="{{ b.title|default:b.name }}">
+                    {% else %}
+                      <span>0{{ forloop.counter }}</span>
+                    {% endif %}
+                  </div>
+                  <h3>{{ b.title|default:b.name }}</h3>
+                  <p>{{ b.description|default:b.desc|default:"A trusted venture and partner brand."|truncatewords:8 }}</p>
+                </article>
+              {% endfor %}
+            {% else %}
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Brand Alpha" data-desc="Creative solutions, strategy and thoughtful execution."><div class="capability-image gradient-one"><span>01</span></div><h3>Brand Alpha</h3><p>Creative solutions, strategy and thoughtful execution.</p></article>
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Brand Beta" data-desc="Digital experiences built around your business goals."><div class="capability-image gradient-two"><span>02</span></div><h3>Brand Beta</h3><p>Digital experiences built around your business goals.</p></article>
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Brand Gamma" data-desc="Reliable services designed to help you grow."><div class="capability-image gradient-three"><span>03</span></div><h3>Brand Gamma</h3><p>Reliable services designed to help you grow.</p></article>
+              <article class="capability-item" onclick="openDetailModal(this)" data-title="Brand Delta" data-desc="From concept to delivery, we make it happen."><div class="capability-image gradient-four"><span>04</span></div><h3>Brand Delta</h3><p>From concept to delivery, we make it happen.</p></article>
+            {% endif %}
+          </div>
+        </div>
+        <div class="carousel-dots" id="brandDots" aria-label="Carousel pages">
+          <button class="dot active" type="button" aria-label="Show brand 1" onclick="goToBrandIndex(0)"></button>
+          <button class="dot" type="button" aria-label="Show brand 2" onclick="goToBrandIndex(1)"></button>
+          <button class="dot" type="button" aria-label="Show brand 3" onclick="goToBrandIndex(2)"></button>
+          <button class="dot" type="button" aria-label="Show brand 4" onclick="goToBrandIndex(3)"></button>
+        </div>
+      </section>
+
+      <!-- Section: Connect with us -->
+      <section class="section-card connect-card draggable-card-item" id="block-connect" data-section="connect">
+        <span class="builder-block-handle"><i class="bi bi-grip-vertical"></i> Drag</span>
+        <div class="section-heading"><h2>Connect with us</h2></div>
+        <div class="contact-grid">
+          <a class="contact-tile" id="tilePhone" href="{% if card.phone %}tel:{{ card.phone }}{% else %}#{% endif %}"><span class="contact-icon blue">☎</span><span>Phone</span></a>
+          <a class="contact-tile" id="tileEmail" href="{% if card.email %}mailto:{{ card.email }}{% else %}#{% endif %}"><span class="contact-icon blue">✉</span><span>Email</span></a>
+          <a class="contact-tile" id="tileWhatsApp" href="{% if card.whatsapp %}https://wa.me/{{ card.whatsapp|cut:' '|cut:'+'|cut:'-' }}{% else %}#{% endif %}" target="_blank" rel="noopener"><span class="contact-icon green">◉</span><span>WhatsApp</span></a>
+          <a class="contact-tile" id="tileWebsite" href="{% if card.existing_website %}{% if not card.existing_website|slice:':4' == 'http' %}https://{% endif %}{{ card.existing_website }}{% else %}#{% endif %}" target="_blank" rel="noopener"><span class="contact-icon blue">◎</span><span>Website</span></a>
+          <a class="contact-tile" id="tileAddress" href="{% if card.google_maps_url %}{{ card.google_maps_url }}{% else %}#{% endif %}" target="_blank" rel="noopener"><span class="contact-icon red">⌖</span><span>Address</span></a>
+          <a class="contact-tile" id="tileMap" href="{% if card.google_maps_url %}{{ card.google_maps_url }}{% else %}#{% endif %}" target="_blank" rel="noopener"><span class="contact-icon blue">▤</span><span>Google Map</span></a>
+        </div>
+      </section>
+
+      <!-- Section: Payments -->
+      <section class="section-card payments-card draggable-card-item" id="block-payments" data-section="payments">
+        <span class="builder-block-handle"><i class="bi bi-grip-vertical"></i> Drag</span>
+        <div class="section-heading">
+          <h2>Payments</h2>
+          <div class="carousel-controls">
+            <button class="icon-button" id="paymentPrev" type="button" aria-label="Previous payment" onclick="scrollPayments('prev')"><svg viewBox="0 0 24 24"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+            <button class="icon-button" id="paymentNext" type="button" aria-label="Next payment" onclick="scrollPayments('next')"><svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+          </div>
+        </div>
+        <div class="carousel-viewport" id="paymentsViewport">
+          <div class="capability-track payments-carousel-track" id="pPaymentsGrid">
+            <!-- Google Pay -->
+            <a class="contact-tile payment-tile" id="pTileGPay" href="javascript:void(0)" onclick="handlePaymentAction('gpay');" {% if card.layout_config.payments and card.layout_config.payments.gpay_enabled == False %}style="display:none;"{% endif %}>
+              <div class="payment-tile-head">
+                <span class="payment-tile-icon" style="background:#fff;">
+                  <svg viewBox="0 0 48 48" width="22" height="22"><path fill="#4285F4" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.5l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#34A853" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.5c-.5 2.8-2.1 5.1-4.5 6.7l7.2 5.6c4.2-3.9 6.9-9.6 6.9-16.8z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.5-.8-3.1-.8-4.6s.3-3.1.8-4.6l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.7l7.9-6.1z"/><path fill="#EA4335" d="M24 48c6.5 0 12-2.1 16-5.8l-7.2-5.6c-2.2 1.5-5 2.4-8.8 2.4-6.3 0-11.6-4.1-13.5-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>
+                </span>
+                <span class="btn-payment-action">Pay</span>
+              </div>
+              <div class="payment-tile-body">
+                <span class="payment-name">Google Pay</span>
+                <span class="payment-sub-hint" id="pValGPay">{{ card.layout_config.payments.gpay|default:"user@okaxis" }}</span>
+              </div>
+            </a>
+
+            <!-- PhonePe -->
+            <a class="contact-tile payment-tile" id="pTilePhonePe" href="javascript:void(0)" onclick="handlePaymentAction('phonepe');" {% if card.layout_config.payments and card.layout_config.payments.phonepe_enabled == False %}style="display:none;"{% endif %}>
+              <div class="payment-tile-head">
+                <span class="payment-tile-icon" style="background:#5F259F;color:#fff;font-weight:800;font-size:14px;line-height:1;">पे</span>
+                <span class="btn-payment-action">Pay</span>
+              </div>
+              <div class="payment-tile-body">
+                <span class="payment-name">PhonePe</span>
+                <span class="payment-sub-hint" id="pValPhonePe">{{ card.layout_config.payments.phonepe|default:"user@ybl" }}</span>
+              </div>
+            </a>
+
+            <!-- Paytm -->
+            <a class="contact-tile payment-tile" id="pTilePaytm" href="javascript:void(0)" onclick="handlePaymentAction('paytm');" {% if card.layout_config.payments and card.layout_config.payments.paytm_enabled == False %}style="display:none;"{% endif %}>
+              <div class="payment-tile-head">
+                <span class="payment-tile-icon" style="background:#002E6E;color:#00BAF2;font-weight:800;font-size:10px;line-height:1;letter-spacing:-.4px;">Paytm</span>
+                <span class="btn-payment-action">Pay</span>
+              </div>
+              <div class="payment-tile-body">
+                <span class="payment-name">Paytm</span>
+                <span class="payment-sub-hint" id="pValPaytm">{{ card.layout_config.payments.paytm|default:"user@paytm" }}</span>
+              </div>
+            </a>
+
+            <!-- PayPal -->
+            <a class="contact-tile payment-tile" id="pTilePayPal" href="javascript:void(0)" onclick="handlePaymentAction('paypal');" {% if card.layout_config.payments and card.layout_config.payments.paypal_enabled == False %}style="display:none;"{% endif %}>
+              <div class="payment-tile-head">
+                <span class="payment-tile-icon" style="background:#003087;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.78.78 0 0 1 .77-.655h6.634c3.486 0 6.03 1.583 5.485 5.093-.574 3.714-3.084 5.378-6.175 5.378H8.812l-.997 6.438a.642.642 0 0 1-.739.363z"/><path fill="#0079C1" d="M9.135 15.637l.95-6.13a.642.642 0 0 1 .634-.543h4.06c2.73 0 4.722 1.239 4.296 3.988-.45 2.909-2.415 4.212-4.836 4.212h-2.23a.641.641 0 0 0-.633.543l-.974 6.29a.64.64 0 0 1-.633.54H7.494a.641.641 0 0 1-.634-.74l1.642-8.16a.642.642 0 0 1 .633-.543z"/></svg>
+                </span>
+                <span class="btn-payment-action">Pay</span>
+              </div>
+              <div class="payment-tile-body">
+                <span class="payment-name">PayPal</span>
+                <span class="payment-sub-hint" id="pValPayPal">{{ card.layout_config.payments.paypal|default:"paypal.me" }}</span>
+              </div>
+            </a>
+
+            <!-- Venmo -->
+            <a class="contact-tile payment-tile" id="pTileVenmo" href="javascript:void(0)" onclick="handlePaymentAction('venmo');" {% if card.layout_config.payments and card.layout_config.payments.venmo_enabled == False %}style="display:none;"{% endif %}>
+              <div class="payment-tile-head">
+                <span class="payment-tile-icon" style="background:#008CFF;color:#fff;font-weight:900;font-size:15px;font-style:italic;line-height:1;">V</span>
+                <span class="btn-payment-action">Pay</span>
+              </div>
+              <div class="payment-tile-body">
+                <span class="payment-name">Venmo</span>
+                <span class="payment-sub-hint" id="pValVenmo">{{ card.layout_config.payments.venmo|default:"@username" }}</span>
+              </div>
+            </a>
+
+            <!-- Cash App -->
+            <a class="contact-tile payment-tile" id="pTileCashApp" href="javascript:void(0)" onclick="handlePaymentAction('cashapp');" {% if card.layout_config.payments and card.layout_config.payments.cashapp_enabled == False %}style="display:none;"{% endif %}>
+              <div class="payment-tile-head">
+                <span class="payment-tile-icon" style="background:#00D632;color:#fff;font-weight:900;font-size:16px;line-height:1;">$</span>
+                <span class="btn-payment-action">Pay</span>
+              </div>
+              <div class="payment-tile-body">
+                <span class="payment-name">Cash App</span>
+                <span class="payment-sub-hint" id="pValCashApp">{{ card.layout_config.payments.cashapp|default:"$cashtag" }}</span>
+              </div>
+            </a>
+
+            <!-- Razorpay -->
+            <a class="contact-tile payment-tile" id="pTileRazorpay" href="javascript:void(0)" onclick="handlePaymentAction('razorpay');" {% if card.layout_config.payments and card.layout_config.payments.razorpay_enabled == False %}style="display:none;"{% endif %}>
+              <div class="payment-tile-head">
+                <span class="payment-tile-icon" style="background:#0C2340;">
+                  <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#fff" d="M22.436 0l-11.91 14.184h6.05L6.037 24l5.362-9.816H5.35L17.26 0z"/><path fill="#087cff" d="M12.08 9.387l-4.57 5.438h3.364L7.54 21.05l8.536-10.155h-4L15.34 6.5h-5.26z"/></svg>
+                </span>
+                <span class="btn-payment-action">Pay</span>
+              </div>
+              <div class="payment-tile-body">
+                <span class="payment-name">Razorpay</span>
+                <span class="payment-sub-hint" id="pValRazorpay">{{ card.layout_config.payments.razorpay|default:"Payment link" }}</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="carousel-dots" id="paymentDots" aria-label="Payments pages"></div>
+      </section>
+
+      <!-- Section: More -->
+      <section class="section-card more-card draggable-card-item" id="block-more" data-section="more">
+        <span class="builder-block-handle"><i class="bi bi-grip-vertical"></i> Drag</span>
+        <div class="section-heading">
+          <h2>More</h2>
+          <div class="carousel-controls">
+            <button class="icon-button" id="morePrev" type="button" aria-label="Previous item" onclick="scrollMore('prev')"><svg viewBox="0 0 24 24"><path d="M19 12H5m7 7-7-7 7-7"/></svg></button>
+            <button class="icon-button" id="moreNext" type="button" aria-label="Next item" onclick="scrollMore('next')"><svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+          </div>
+        </div>
+        <div class="carousel-viewport" id="moreViewport">
+          <div class="capability-track more-carousel-track" id="pMoreGrid">
+            <!-- 1. Document (PDF File or Link) -->
+            <div class="more-item-tile" id="pTileMoreDoc" data-url="{% if card and card.layout_config.more.doc_url %}{{ card.layout_config.more.doc_url }}{% else %}#{% endif %}" onclick="handleMoreDocClick(event);" {% if card.layout_config.more and card.layout_config.more.doc_enabled == False %}style="display:none;"{% endif %}>
+              <div class="more-item-icon pdf-badge-icon">
+                <i class="bi bi-file-earmark-pdf-fill"></i>
+              </div>
+              <div class="more-item-info">
+                <strong class="more-item-title" id="pValDocTitle">{{ card.layout_config.more.doc_title|default:"Document" }}</strong>
+                <span class="more-item-desc">PDF Document</span>
+              </div>
+              <a class="more-action-btn btn-doc-download" id="pBtnDocDownload" href="{% if card and card.layout_config.more.doc_url %}{{ card.layout_config.more.doc_url }}{% else %}#{% endif %}" target="_blank" download>
+                <i class="bi bi-download"></i>
+                <span>Download</span>
+              </a>
+            </div>
+
+            <!-- 2. Google Drive Link -->
+            <div class="more-item-tile" id="pTileMoreGDrive" data-url="{% if card and card.layout_config.more.gdrive_url %}{{ card.layout_config.more.gdrive_url }}{% else %}#{% endif %}" onclick="handleMoreGDriveClick(event);" {% if card.layout_config.more and card.layout_config.more.gdrive_enabled == False %}style="display:none;"{% endif %}>
+              <div class="more-item-icon gdrive-badge-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#FFC107" d="M8.2 3.8l5.8 10H2.4l5.8-10z"/><path fill="#1976D2" d="M14 13.8l5.8-10H8.2l5.8 10z"/><path fill="#4CAF50" d="M19.8 13.8L14 23.8H2.4l5.8-10h11.6z"/></svg>
+              </div>
+              <div class="more-item-info">
+                <strong class="more-item-title" id="pValGDriveTitle">{{ card.layout_config.more.gdrive_title|default:"Google Drive" }}</strong>
+                <span class="more-item-desc">Cloud Folder</span>
+              </div>
+              <a class="more-action-btn btn-gdrive-open" id="pBtnGDriveOpen" href="{% if card and card.layout_config.more.gdrive_url %}{{ card.layout_config.more.gdrive_url }}{% else %}#{% endif %}" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right"></i>
+                <span>Open Folder</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-dots" id="moreDots" aria-label="More pages"></div>
+      </section>
+
+      <!-- Section: Callback Lead Form -->
+      <section class="section-card callback-card draggable-card-item" id="block-callback" data-section="callback">
+        <span class="builder-block-handle"><i class="bi bi-grip-vertical"></i> Drag</span>
+        <div class="section-heading"><h2>Request a callback</h2></div>
+        <form id="callbackForm" onsubmit="handleCallbackSubmit(event);">
+          <label for="visitorName">Name <span>*</span></label>
+          <input id="visitorName" name="name" type="text" placeholder="Your name" required />
+
+          <label for="visitorEmail">Email <span>*</span></label>
+          <input id="visitorEmail" name="email" type="email" placeholder="Your email address" required />
+
+          <label for="visitorPhone">Mobile number <span>*</span></label>
+          <input id="visitorPhone" name="phone" type="tel" placeholder="+91 9876543210" required />
+
+          <label for="visitorMessage">Message <span>*</span></label>
+          <textarea id="visitorMessage" name="message" rows="4" placeholder="How can we help your business?" required></textarea>
+
+          <p class="privacy-note">Please avoid including sensitive information you don't want to share on this page.</p>
+          <button class="submit-button" id="btnSubmitCallback" type="submit">Submit request</button>
+          <p class="form-feedback" id="formFeedback" role="status" style="display:none;"></p>
+        </form>
+      </section>
+
+    </div><!-- /#tabContentHome -->
+
+    <!-- 6. Card Footer Copyright & Utility Notice -->
+    <div class="card-footer-copyright" id="cardCopyrightNotice">
+      <div class="footer-utility-actions">
+        <button class="footer-utility-btn" type="button" onclick="handleSnippetShare();">
+          <i class="bi bi-box-arrow-up"></i> Share card
+        </button>
+        <button class="footer-utility-btn" type="button" onclick="toggleCardTheme();">
+          <i class="bi bi-moon-stars" id="themeToggleIcon"></i> <span id="themeToggleText">Dark mode</span>
+        </button>
+      </div>
+      <div>
+        {% if card.layout_config.settings and card.layout_config.settings.copyright %}
+          {{ card.layout_config.settings.copyright }}
+        {% else %}
+          &copy; 2026 {{ card.business_name|default:"BrandNest" }}. All Rights Reserved.
+        {% endif %}
+      </div>
+    </div>
+
+  </div><!-- /.content -->
+
+  <!-- 7. Persistent Sticky Contact Actions (Call Us & WhatsApp) -->
+  <div class="sticky-actions" id="cardContactActionBar" aria-label="Quick contact actions">
+    <a class="call-us" id="stickyCallBtn" href="{% if card.phone %}tel:{{ card.phone }}{% else %}#{% endif %}">
+      <i class="bi bi-telephone-fill" style="font-size:17px;"></i> <span>Call Us</span>
+    </a>
+    <a class="whatsapp-float" id="stickyWaBtn" href="{% if card.whatsapp %}https://wa.me/{{ card.whatsapp|cut:' '|cut:'+'|cut:'-' }}{% else %}#{% endif %}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+      <i class="bi bi-whatsapp"></i>
+    </a>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notice" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Floating Facebook Messenger Button (Settings Feature) -->
+  <a href="{% if card.layout_config.settings and card.layout_config.settings.fb_page_id %}https://m.me/{{ card.layout_config.settings.fb_page_id }}{% else %}#{% endif %}" target="_blank" id="floatingFbChatBtn" class="floating-fb-messenger-btn" style="position:fixed;bottom:85px;right:18px;width:48px;height:48px;border-radius:50%;background:#0084FF;color:#FFFFFF !important;display:{% if card.layout_config.settings and card.layout_config.settings.fb_chat_enabled %}grid{% else %}none{% endif %};place-items:center;font-size:24px;box-shadow:0 6px 20px rgba(0,132,255,0.45);z-index:99;text-decoration:none;" title="Chat on Messenger">
+    <i class="bi bi-messenger" style="color:#FFFFFF !important;"></i>
+  </a>
+
+  <!-- Sensitive Material Warning Overlay (Settings Feature) -->
+  <div id="sensitiveContentWarningOverlay" style="position:fixed;inset:0;background:rgba(11,15,25,0.96);backdrop-filter:blur(16px);z-index:99999;display:{% if card.layout_config.settings and card.layout_config.settings.sensitive_material and card.layout_config.settings.sensitive_material != 'none' %}flex{% else %}none{% endif %};flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;">
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(239,68,68,0.18);color:#EF4444;display:grid;place-items:center;font-size:30px;margin-bottom:18px;">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+    </div>
+    <h4 style="font-size:22px;font-weight:700;color:#FFFFFF;margin-bottom:8px;" id="sensitiveWarningBadge">
+      {% if card.layout_config.settings and card.layout_config.settings.sensitive_material == 'sensitive' %}Sensitive Content{% elif card.layout_config.settings and card.layout_config.settings.sensitive_material %}{{ card.layout_config.settings.sensitive_material }} Warning{% else %}Age-Restricted Content{% endif %}
+    </h4>
+    <p style="font-size:14px;color:rgba(255,255,255,0.75);max-width:280px;line-height:1.5;margin-bottom:24px;">
+      This profile contains sensitive or age-restricted material. Please confirm you meet the requirement to view.
+    </p>
+    <div style="display:flex;gap:12px;width:100%;max-width:260px;">
+      <button type="button" class="btn btn-success rounded-pill px-4 py-2 flex-grow-1 fw-bold" onclick="document.getElementById('sensitiveContentWarningOverlay').style.display='none';">
+        Enter
+      </button>
+      <button type="button" class="btn btn-outline-light rounded-pill px-4 py-2 flex-grow-1" onclick="window.history.back();">
+        Leave
+      </button>
+    </div>
+  </div>
+
+  <!-- Detail Half-Page Bottom Sheet Modal -->
+  <div class="card-bottom-sheet-backdrop" id="cardModalBackdrop" onclick="closeCardModal()"></div>
+  <div class="card-bottom-sheet" id="cardBottomSheetModal">
+    <div class="sheet-drag-handle" onclick="closeCardModal()"></div>
+    <div class="sheet-close-btn" onclick="closeCardModal()">&times;</div>
+    <div class="sheet-content">
+      <img src="" alt="" id="modalImg" class="sheet-image" style="display:none;">
+      <h4 id="modalTitle" class="sheet-title"></h4>
+      <p id="modalDesc" class="sheet-desc"></p>
+      <a href="#" target="_blank" id="modalWhatsappBtn" class="sheet-whatsapp-btn">
+        <i class="bi bi-whatsapp"></i> WhatsApp Enquire
+      </a>
+    </div>
+  </div>
+
+</div><!-- /.card-theme-wrapper -->
+
+<!-- Interactive Scripts & Integration Handlers -->
+<script>
+// 1. Toast Notification
+function showSnippetToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+// 2. Share Functionality
+function handleSnippetShare() {
+  const parentShareBtn = document.getElementById('btnShareModal');
+  if (parentShareBtn) {
+    parentShareBtn.click();
+    return;
+  }
+  if (navigator.share) {
+    navigator.share({
+      title: document.title || 'Digital Business Card',
+      url: window.location.href
+    }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href);
+    showSnippetToast('Card link copied to clipboard!');
+  } else {
+    prompt('Copy card link:', window.location.href);
+  }
+}
+
+// 3. Copy About Text
+function copyAboutText() {
+  const textEl = document.getElementById('aboutText');
+  if (!textEl) return;
+  const text = textEl.textContent.trim();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      showSnippetToast('About story copied to clipboard!');
+    });
+  } else {
+    prompt('Copy about text:', text);
+  }
+}
+
+// 4. About Text Collapsing
+function checkAboutTextClamp() {
+  const el = document.getElementById('aboutText');
+  const btn = document.getElementById('btnAboutToggle');
+  if (!el || !btn) return;
+  if (el.scrollHeight > 105) {
+    el.classList.add('collapsed');
+    btn.style.display = 'inline-flex';
+    btn.innerHTML = 'Show more <i class="bi bi-chevron-down"></i>';
+  } else {
+    el.classList.remove('collapsed');
+    btn.style.display = 'none';
+  }
+}
+
+function toggleAboutExpand() {
+  const el = document.getElementById('aboutText');
+  const btn = document.getElementById('btnAboutToggle');
+  if (!el || !btn) return;
+  const isCollapsed = el.classList.contains('collapsed');
+  if (isCollapsed) {
+    el.classList.remove('collapsed');
+    btn.innerHTML = 'Show less <i class="bi bi-chevron-up"></i>';
+  } else {
+    el.classList.add('collapsed');
+    btn.innerHTML = 'Show more <i class="bi bi-chevron-down"></i>';
+  }
+}
+
+// 5. Capabilities Carousel Slider Controls
+function getCapCarousel() {
+  return document.getElementById('capViewport');
+}
+
+window.scrollCap = function(dir) {
+  const vp = getCapCarousel();
+  if (!vp) return;
+  const amount = 186; // item width + gap
+  vp.scrollBy({ left: dir === 'next' ? amount : -amount, behavior: 'smooth' });
+};
+
+window.goToCapIndex = function(idx) {
+  const vp = getCapCarousel();
+  if (!vp) return;
+  const amount = 186;
+  vp.scrollTo({ left: idx * amount, behavior: 'smooth' });
+};
+
+window.updateCapDots = function() {
+  const vp = getCapCarousel();
+  const dots = document.querySelectorAll('#capDots .dot');
+  if (!vp || dots.length === 0) return;
+  const idx = Math.min(dots.length - 1, Math.max(0, Math.round(vp.scrollLeft / 186)));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+};
+
+document.getElementById('capViewport')?.addEventListener('scroll', window.updateCapDots);
+
+// Brands Carousel Slider Controls
+function getBrandCarousel() {
+  return document.getElementById('brandsViewport');
+}
+
+window.scrollBrands = function(dir) {
+  const vp = getBrandCarousel();
+  if (!vp) return;
+  const amount = 186;
+  vp.scrollBy({ left: dir === 'next' ? amount : -amount, behavior: 'smooth' });
+};
+
+window.goToBrandIndex = function(idx) {
+  const vp = getBrandCarousel();
+  if (!vp) return;
+  const amount = 186;
+  vp.scrollTo({ left: idx * amount, behavior: 'smooth' });
+};
+
+window.updateBrandDots = function() {
+  const vp = getBrandCarousel();
+  const dots = document.querySelectorAll('#brandDots .dot');
+  if (!vp || dots.length === 0) return;
+  const idx = Math.min(dots.length - 1, Math.max(0, Math.round(vp.scrollLeft / 186)));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+};
+
+document.getElementById('brandsViewport')?.addEventListener('scroll', window.updateBrandDots);
+
+// Payments Carousel Slider Controls
+function getPaymentCarousel() {
+  return document.getElementById('paymentsViewport');
+}
+
+window.scrollPayments = function(dir) {
+  const vp = getPaymentCarousel();
+  if (!vp) return;
+  const amount = 167; // item 155 + gap 12
+  vp.scrollBy({ left: dir === 'next' ? amount : -amount, behavior: 'smooth' });
+};
+
+window.goToPaymentIndex = function(idx) {
+  const vp = getPaymentCarousel();
+  if (!vp) return;
+  const amount = 167;
+  vp.scrollTo({ left: idx * amount, behavior: 'smooth' });
+};
+
+window.updatePaymentDots = function() {
+  const vp = getPaymentCarousel();
+  if (!vp) return;
+  const dotsContainer = document.getElementById('paymentDots');
+  if (!dotsContainer) return;
+  const visibleTiles = Array.from(vp.querySelectorAll('.payment-tile')).filter(t => t.style.display !== 'none');
+  const controls = vp.closest('.payments-card')?.querySelector('.carousel-controls');
+  if (visibleTiles.length <= 1) {
+    dotsContainer.style.display = 'none';
+    if (controls) controls.style.display = 'none';
+    return;
+  }
+  dotsContainer.style.display = 'flex';
+  if (controls) controls.style.display = 'flex';
+
+  if (dotsContainer.children.length !== visibleTiles.length) {
+    dotsContainer.innerHTML = '';
+    visibleTiles.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Show payment ${i + 1}`);
+      dot.onclick = () => window.goToPaymentIndex(i);
+      dotsContainer.appendChild(dot);
+    });
+  }
+  const dots = dotsContainer.querySelectorAll('.dot');
+  const idx = Math.min(dots.length - 1, Math.max(0, Math.round(vp.scrollLeft / 167)));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+};
+
+document.getElementById('paymentsViewport')?.addEventListener('scroll', window.updatePaymentDots);
+
+// More Section Carousel Slider Controls
+function getMoreCarousel() {
+  return document.getElementById('moreViewport');
+}
+
+window.scrollMore = function(dir) {
+  const vp = getMoreCarousel();
+  if (!vp) return;
+  const amount = 262; // item 250 + gap 12
+  vp.scrollBy({ left: dir === 'next' ? amount : -amount, behavior: 'smooth' });
+};
+
+window.goToMoreIndex = function(idx) {
+  const vp = getMoreCarousel();
+  if (!vp) return;
+  const amount = 262;
+  vp.scrollTo({ left: idx * amount, behavior: 'smooth' });
+};
+
+window.updateMoreDots = function() {
+  const vp = getMoreCarousel();
+  if (!vp) return;
+  const dotsContainer = document.getElementById('moreDots');
+  if (!dotsContainer) return;
+  const visibleItems = Array.from(vp.querySelectorAll('.more-item-tile')).filter(t => t.style.display !== 'none');
+  const controls = vp.closest('.more-card')?.querySelector('.carousel-controls');
+  if (visibleItems.length <= 1) {
+    dotsContainer.style.display = 'none';
+    if (controls) controls.style.display = 'none';
+    return;
+  }
+  dotsContainer.style.display = 'flex';
+  if (controls) controls.style.display = 'flex';
+
+  if (dotsContainer.children.length !== visibleItems.length) {
+    dotsContainer.innerHTML = '';
+    visibleItems.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Show item ${i + 1}`);
+      dot.onclick = () => window.goToMoreIndex(i);
+      dotsContainer.appendChild(dot);
+    });
+  }
+  const dots = dotsContainer.querySelectorAll('.dot');
+  const idx = Math.min(dots.length - 1, Math.max(0, Math.round(vp.scrollLeft / 262)));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+};
+
+document.getElementById('moreViewport')?.addEventListener('scroll', window.updateMoreDots);
+
+// More Section Click Handlers
+window.handleMoreDocClick = function(e) {
+  if (e.target.closest('#pBtnDocDownload')) return;
+  const tile = document.getElementById('pTileMoreDoc');
+  const url = tile?.getAttribute('data-url') || document.getElementById('pBtnDocDownload')?.getAttribute('href');
+  if (url && url !== '#' && !url.endsWith('/#')) {
+    window.open(url, '_blank');
+  }
+};
+
+window.handleMoreGDriveClick = function(e) {
+  if (e.target.closest('#pBtnGDriveOpen')) return;
+  const tile = document.getElementById('pTileMoreGDrive');
+  const url = tile?.getAttribute('data-url') || document.getElementById('pBtnGDriveOpen')?.getAttribute('href');
+  if (url && url !== '#' && !url.endsWith('/#')) {
+    window.open(url, '_blank');
+  }
+};
+
+// 6. Navigation Tabs
+function switchCardTab(tab) {
+  const homeTab = document.getElementById('tabContentHome');
+  const ytBtn = document.getElementById('tabYoutubeBtn');
+  const homeBtn = document.getElementById('tabHomeBtn');
+  if (!homeTab || !homeBtn) return;
+
+  if (tab === 'youtube') {
+    // If Youtube link is configured, navigate to channel
+    const ytUrl = (ytBtn && ytBtn.href) ? ytBtn.href : 'https://youtube.com';
+    window.open(ytUrl, '_blank');
+  } else {
+    homeTab.style.display = 'block';
+    homeBtn.classList.add('active');
+  }
+}
+
+// 7. Callback Form Submission
+function handleCallbackSubmit(e) {
+  e.preventDefault();
+  const form = document.getElementById('callbackForm');
+  const feedback = document.getElementById('formFeedback');
+  if (feedback) {
+    feedback.textContent = 'Thank you! We will get back to you shortly.';
+    feedback.style.display = 'block';
+  }
+  showSnippetToast('Callback requested successfully!');
+  if (form) form.reset();
+}
+
+// 8. Theme Toggle (Dark / Light)
+function toggleCardTheme() {
+  const wrapper = document.getElementById('cardThemeWrapper');
+  const icon = document.getElementById('themeToggleIcon');
+  const text = document.getElementById('themeToggleText');
+  if (!wrapper) return;
+  const isDark = wrapper.classList.toggle('theme-dark');
+  if (icon) icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
+  if (text) text.textContent = isDark ? 'Light mode' : 'Dark mode';
+}
+
+// 9. VCF Download
+function downloadVCard() {
+  const name = document.getElementById('pBusinessName')?.textContent.trim() || 'Contact';
+  const org = document.getElementById('pCompanyNameText')?.textContent.trim() || '';
+  const title = document.getElementById('pDesignation')?.textContent.trim() || '';
+  const phone = '{{ card.phone|default:"" }}' || document.getElementById('phone')?.value || '';
+  const email = '{{ card.email|default:"" }}' || document.getElementById('email')?.value || '';
+  const website = '{{ card.existing_website|default:"" }}' || document.getElementById('website')?.value || '';
+
+  let vcf = "BEGIN:VCARD\nVERSION:3.0\n";
+  vcf += `FN:${name}\n`;
+  if (org) vcf += `ORG:${org}\n`;
+  if (title) vcf += `TITLE:${title}\n`;
+  if (phone) vcf += `TEL;TYPE=CELL:${phone}\n`;
+  if (email) vcf += `EMAIL;TYPE=WORK:${email}\n`;
+  if (website) vcf += `URL:${website}\n`;
+  vcf += "END:VCARD";
+
+  const blob = new Blob([vcf], { type: 'text/vcard;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${name.replace(/\s+/g, '_')}.vcf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showSnippetToast('Contact vCard saved!');
+}
+
+// 10. Half-Page Bottom Sheet Modal Details
+function openDetailModal(el) {
+  const title = el.getAttribute('data-title');
+  const desc = el.getAttribute('data-desc');
+  const img = el.getAttribute('data-image');
+  const whatsappNumber = '{{ card.whatsapp|cut:" "|cut:"+"|cut:"-" }}' || document.getElementById('whatsapp')?.value.replace(/[^0-9]/g, '');
+
+  const mTitle = document.getElementById('modalTitle');
+  const mDesc = document.getElementById('modalDesc');
+  const mImg = document.getElementById('modalImg');
+  const mBtn = document.getElementById('modalWhatsappBtn');
+
+  if (mTitle) mTitle.textContent = title;
+  if (mDesc) mDesc.textContent = desc;
+
+  if (mImg) {
+    if (img && img.trim() !== '') {
+      mImg.src = img;
+      mImg.style.display = 'block';
+    } else {
+      mImg.style.display = 'none';
+    }
+  }
+
+  if (mBtn) {
+    const textMsg = encodeURIComponent(`Hi, I'm interested in "${title}". Please share more details.`);
+    mBtn.href = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${textMsg}` : '#';
+  }
+
+  document.getElementById('cardModalBackdrop').style.display = 'block';
+  document.getElementById('cardBottomSheetModal').style.display = 'block';
+}
+
+function openBrandModal(el, e) {
+  if (el.getAttribute('href') && el.getAttribute('href') !== '#') return;
+  e.preventDefault();
+  openDetailModal(el);
+}
+
+function closeCardModal() {
+  const b = document.getElementById('cardModalBackdrop');
+  const m = document.getElementById('cardBottomSheetModal');
+  if (b) b.style.display = 'none';
+  if (m) m.style.display = 'none';
+}
+
+// 11. Stored Section Order Application
+function applyStoredIdentityOrder() {
+  const stack = document.getElementById('pIdentityStack');
+  if (!stack) return;
+  const savedIdentityOrder = "{{ card.layout_config.identity_order|default:'company,role,title' }}";
+  if (!savedIdentityOrder) return;
+  const map = {
+    'company': document.getElementById('pLineCompanyWrap'),
+    'role': document.getElementById('pLineRoleWrap'),
+    'title': document.getElementById('pLineTitleWrap')
+  };
+  savedIdentityOrder.split(',').forEach(key => {
+    const el = map[key];
+    if (el) stack.appendChild(el);
+  });
+}
+
+function applyStoredSectionOrder() {
+  const homeContainer = document.getElementById('tabContentHome');
+  if (!homeContainer) return;
+
+  let order = null;
+  {% if card.layout_config.section_order %}
+    try {
+      order = {{ card.layout_config.section_order|safe }};
+    } catch(e) {}
+  {% endif %}
+
+  let disabled = null;
+  {% if card.layout_config.disabled_sections %}
+    try {
+      disabled = {{ card.layout_config.disabled_sections|safe }};
+    } catch(e) {}
+  {% endif %}
+
+  if (Array.isArray(order) && order.length > 0) {
+    order.forEach(function(key) {
+      const el = document.getElementById('block-' + key);
+      if (el) homeContainer.appendChild(el);
+    });
+  }
+
+  if (Array.isArray(disabled) && disabled.length > 0) {
+    disabled.forEach(function(key) {
+      const el = document.getElementById('block-' + key);
+      if (el) el.style.display = 'none';
+    });
+  }
+}
+
+// 12. Natural Hand & Touch Gestures for Picture Adjustments (1-finger drag, 2-finger pinch, mouse drag, wheel)
+window.isAssetGestureActive = false;
+window.lastAssetGestureTime = 0;
+
+function initAssetGestureController(opts) {
+  const container = document.getElementById(opts.containerId);
+  const target = document.getElementById(opts.targetId);
+  if (!container || !target) return null;
+
+  const inputX = document.getElementById(opts.inputXId);
+  const inputY = document.getElementById(opts.inputYId);
+  const inputZoom = document.getElementById(opts.inputZoomId);
+  const inputPos = document.getElementById(opts.inputPosId);
+  const lblCoords = document.getElementById(opts.lblCoordsId);
+  const lblZoom = document.getElementById(opts.lblZoomId);
+  const rangeZoom = document.getElementById(opts.rangeZoomId);
+
+  // Parse initial values
+  let x = 0, y = 0;
+  if (inputX && inputX.value) {
+    x = parseFloat(inputX.value) || 0;
+  }
+  if (inputY && inputY.value) {
+    y = parseFloat(inputY.value) || 0;
+  }
+  if (!x && !y && inputPos && inputPos.value) {
+    const parts = inputPos.value.split(' ');
+    if (parts.length >= 2) {
+      x = (parseFloat(parts[0]) || 50) - 50;
+      y = (parseFloat(parts[1]) || 50) - 50;
+    }
+  }
+
+  let zoom = parseFloat(inputZoom?.value || '1') || 1;
+  zoom = Math.max(1, Math.min(3.5, zoom));
+
+  let isDragging = false;
+  let isPinching = false;
+  let hasMoved = false;
+
+  let startX = 0, startY = 0;
+  let initialX = x, initialY = y;
+
+  let initialPinchDist = 0;
+  let initialPinchZoom = zoom;
+  let initialPinchMidX = 0, initialPinchMidY = 0;
+
+  function getMaxPan(z) {
+    if (opts.type === 'banner') {
+      return {
+        maxX: Math.max(25, (z - 1) * 55 + 25),
+        maxY: Math.max(35, (z - 1) * 70 + 35)
+      };
+    }
+    return {
+      maxX: Math.max(25, (z - 1) * 60 + 25),
+      maxY: Math.max(25, (z - 1) * 60 + 25)
+    };
+  }
+
+  function applyTransform(notifySave) {
+    const pan = getMaxPan(zoom);
+    x = Math.max(-pan.maxX, Math.min(pan.maxX, x));
+    y = Math.max(-pan.maxY, Math.min(pan.maxY, y));
+
+    target.style.transform = `translate(${x.toFixed(1)}%, ${y.toFixed(1)}%) scale(${zoom.toFixed(2)})`;
+    target.style.transformOrigin = 'center center';
+
+    if (inputX) inputX.value = x.toFixed(1) + '%';
+    if (inputY) inputY.value = y.toFixed(1) + '%';
+    if (inputZoom) inputZoom.value = zoom.toFixed(2);
+    if (inputPos) inputPos.value = (x + 50).toFixed(1) + '% ' + (y + 50).toFixed(1) + '%';
+
+    if (lblCoords) lblCoords.textContent = `${(x + 50).toFixed(0)}%, ${(y + 50).toFixed(0)}%`;
+    if (lblZoom) lblZoom.textContent = zoom.toFixed(2) + 'x';
+    if (rangeZoom) rangeZoom.value = zoom;
+
+    if (notifySave && typeof window.scheduleAutoSave === 'function') {
+      window.scheduleAutoSave();
+    }
+  }
+
+  // Initial apply
+  applyTransform(false);
+
+  // Touch Event Listeners (1-finger drag, 2-finger pinch)
+  function onTouchStart(e) {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      isPinching = false;
+      hasMoved = false;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      initialX = x;
+      initialY = y;
+      container.style.cursor = 'grabbing';
+      window.isAssetGestureActive = true;
+    } else if (e.touches.length >= 2) {
+      isDragging = false;
+      isPinching = true;
+      hasMoved = true;
+      const t0 = e.touches[0];
+      const t1 = e.touches[1];
+      initialPinchDist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
+      initialPinchZoom = zoom;
+      initialPinchMidX = (t0.clientX + t1.clientX) / 2;
+      initialPinchMidY = (t0.clientY + t1.clientY) / 2;
+      initialX = x;
+      initialY = y;
+      window.isAssetGestureActive = true;
+    }
+  }
+
+  function onTouchMove(e) {
+    if (isPinching && e.touches && e.touches.length >= 2) {
+      if (e.cancelable) e.preventDefault();
+      hasMoved = true;
+      window.lastAssetGestureTime = Date.now();
+      const t0 = e.touches[0];
+      const t1 = e.touches[1];
+      const curDist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
+      if (initialPinchDist > 0) {
+        const factor = curDist / initialPinchDist;
+        zoom = Math.max(1, Math.min(3.5, initialPinchZoom * factor));
+      }
+      const curMidX = (t0.clientX + t1.clientX) / 2;
+      const curMidY = (t0.clientY + t1.clientY) / 2;
+      const rect = container.getBoundingClientRect();
+      const dx = ((curMidX - initialPinchMidX) / (rect.width || 100)) * 100;
+      const dy = ((curMidY - initialPinchMidY) / (rect.height || 100)) * 100;
+      x = initialX + dx;
+      y = initialY + dy;
+      applyTransform(false);
+    } else if (isDragging && e.touches && e.touches.length === 1) {
+      const curX = e.touches[0].clientX;
+      const curY = e.touches[0].clientY;
+      if (Math.hypot(curX - startX, curY - startY) > 2) hasMoved = true;
+      if (hasMoved) {
+        if (e.cancelable) e.preventDefault();
+        window.lastAssetGestureTime = Date.now();
+        const rect = container.getBoundingClientRect();
+        const dx = ((curX - startX) / (rect.width || 100)) * 100;
+        const dy = ((curY - startY) / (rect.height || 100)) * 100;
+        x = initialX + dx;
+        y = initialY + dy;
+        applyTransform(false);
+      }
+    }
+  }
+
+  function onTouchEnd(e) {
+    if (isDragging || isPinching) {
+      isDragging = false;
+      isPinching = false;
+      container.style.cursor = 'grab';
+      window.isAssetGestureActive = false;
+      if (hasMoved) {
+        window.lastAssetGestureTime = Date.now();
+        applyTransform(true);
+      }
+    }
+  }
+
+  // Mouse Event Listeners (Desktop drag)
+  function onMouseDown(e) {
+    if (e.button !== 0) return;
+    isDragging = true;
+    hasMoved = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    initialX = x;
+    initialY = y;
+    container.style.cursor = 'grabbing';
+    window.isAssetGestureActive = true;
+    if (e.cancelable) e.preventDefault();
+  }
+
+  function onMouseMove(e) {
+    if (!isDragging) return;
+    const curX = e.clientX;
+    const curY = e.clientY;
+    if (Math.hypot(curX - startX, curY - startY) > 2) hasMoved = true;
+    if (hasMoved) {
+      window.lastAssetGestureTime = Date.now();
+      const rect = container.getBoundingClientRect();
+      const dx = ((curX - startX) / (rect.width || 100)) * 100;
+      const dy = ((curY - startY) / (rect.height || 100)) * 100;
+      x = initialX + dx;
+      y = initialY + dy;
+      applyTransform(false);
+    }
+  }
+
+  function onMouseUp(e) {
+    if (isDragging) {
+      isDragging = false;
+      container.style.cursor = 'grab';
+      window.isAssetGestureActive = false;
+      if (hasMoved) {
+        window.lastAssetGestureTime = Date.now();
+        applyTransform(true);
+      }
+    }
+  }
+
+  // Wheel Zoom (Mouse wheel or Trackpad pinch)
+  function onWheel(e) {
+    if (!document.getElementById('previewViewport')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const delta = e.deltaY < 0 ? 0.08 : -0.08;
+    zoom = Math.max(1, Math.min(3.5, zoom + delta));
+    window.lastAssetGestureTime = Date.now();
+    applyTransform(true);
+  }
+
+  container.addEventListener('touchstart', onTouchStart, { passive: false });
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+  window.addEventListener('touchend', onTouchEnd);
+  window.addEventListener('touchcancel', onTouchEnd);
+
+  container.addEventListener('mousedown', onMouseDown);
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
+
+  container.addEventListener('wheel', onWheel, { passive: false });
+
+  // Suppress click if gesture just happened
+  container.addEventListener('click', function(e) {
+    if (hasMoved || (Date.now() - window.lastAssetGestureTime < 400)) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }
+  }, true);
+
+  return {
+    setZoom: function(newZoom) {
+      zoom = Math.max(1, Math.min(3.5, parseFloat(newZoom) || 1));
+      applyTransform(true);
+    },
+    reset: function() {
+      x = 0;
+      y = 0;
+      zoom = 1;
+      applyTransform(true);
+    }
+  };
+}
+
+function initAssetGestures() {
+  window.avatarGesture = initAssetGestureController({
+    type: 'avatar',
+    containerId: 'avatarCircleWrapper',
+    targetId: 'pAvatarImg',
+    inputXId: 'inputAvatarX',
+    inputYId: 'inputAvatarY',
+    inputZoomId: 'inputAvatarZoom',
+    inputPosId: 'inputAvatarPos',
+    lblCoordsId: 'lblAvatarCoords',
+    lblZoomId: 'lblAvatarZoom',
+    rangeZoomId: 'rangeAvatarZoom'
+  });
+
+  window.logoGesture = initAssetGestureController({
+    type: 'logo',
+    containerId: 'cardLogoBadge',
+    targetId: 'pLogoImg',
+    inputXId: 'inputLogoX',
+    inputYId: 'inputLogoY',
+    inputZoomId: 'inputLogoZoom',
+    inputPosId: 'inputLogoPos',
+    lblCoordsId: 'lblLogoCoords',
+    lblZoomId: 'lblLogoZoom',
+    rangeZoomId: 'rangeLogoZoom'
+  });
+
+  window.bannerGesture = initAssetGestureController({
+    type: 'banner',
+    containerId: 'sec-banner',
+    targetId: 'pBannerLayer',
+    inputXId: 'inputBannerX',
+    inputYId: 'inputBannerY',
+    inputZoomId: 'inputBannerZoom',
+    inputPosId: 'inputBannerPos',
+    lblCoordsId: 'lblBannerCoords',
+    lblZoomId: 'lblBannerZoom',
+    rangeZoomId: 'rangeBannerZoom'
+  });
+}
+
+window.setPreviewZoom = function(type, val) {
+  if (type === 'avatar' && window.avatarGesture) window.avatarGesture.setZoom(val);
+  else if (type === 'logo' && window.logoGesture) window.logoGesture.setZoom(val);
+  else if (type === 'banner' && window.bannerGesture) window.bannerGesture.setZoom(val);
+};
+
+window.initAvatarDragger = function() { initAssetGestures(); };
+window.initLogoDragger = function() { initAssetGestures(); };
+window.initBannerDragger = function() { initAssetGestures(); };
+
+// 13. Payment Action Handler & Toast
+window.handlePaymentAction = function(appKey) {
+  const valEl = document.getElementById('pVal' + appKey.charAt(0).toUpperCase() + appKey.slice(1));
+  const val = (valEl?.textContent || '').trim();
+  if (!val) return;
+
+  if (['gpay', 'phonepe', 'paytm'].includes(appKey)) {
+    const owner = (document.getElementById('pBusinessName')?.textContent || 'BrandNest User').trim();
+    const upiUrl = `upi://pay?pa=${encodeURIComponent(val)}&pn=${encodeURIComponent(owner)}&cu=INR`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(val).catch(() => {});
+    }
+    showPaymentToast(`Copied ${val} to clipboard!`);
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = upiUrl;
+    }
+  } else if (appKey === 'paypal') {
+    const clean = val.replace(/^https?:\/\//, '').replace(/^paypal\.me\//, '');
+    window.open(`https://paypal.me/${clean}`, '_blank');
+  } else if (appKey === 'venmo') {
+    const clean = val.replace(/^@/, '');
+    window.open(`https://venmo.com/${clean}`, '_blank');
+  } else if (appKey === 'cashapp') {
+    const clean = val.replace(/^\$/, '');
+    window.open(`https://cash.app/$${clean}`, '_blank');
+  } else if (appKey === 'razorpay') {
+    const url = val.startsWith('http') ? val : `https://${val}`;
+    window.open(url, '_blank');
+  }
+};
+
+window.showPaymentToast = function(msg) {
+  let toast = document.getElementById('paymentToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'paymentToast';
+    toast.className = 'payment-toast';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<i class="bi bi-check-circle-fill" style="color:#10B981;"></i> <span>${msg}</span>`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+};
+
+// 14. Initialization
+function initAllCardControllers() {
+  applyStoredSectionOrder();
+  applyStoredIdentityOrder();
+  checkAboutTextClamp();
+  initAssetGestures();
+  window.updateCapDots?.();
+  window.updateBrandDots?.();
+  window.updatePaymentDots?.();
+  window.updateMoreDots?.();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAllCardControllers);
+} else {
+  initAllCardControllers();
+}
+setTimeout(function() {
+  initAssetGestures();
+  window.updatePaymentDots?.();
+  window.updateMoreDots?.();
+}, 80);
+</script>
